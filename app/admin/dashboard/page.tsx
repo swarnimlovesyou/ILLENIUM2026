@@ -49,11 +49,11 @@ export default function AdminDashboard() {
                 gap: "0.4rem",
                 padding: "0.2rem 0.6rem",
                 borderRadius: "999px",
-                background: "rgba(216, 255, 46, 0.1)",
-                border: "1px solid rgba(216, 255, 46, 0.3)",
+                background: "rgba(255, 35, 143, 0.15)",
+                border: "1px solid rgba(255, 35, 143, 0.15)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
-                color: "var(--acid)",
+                color: "#ff238f",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
                 marginBottom: "0.5rem"
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
         <div className="kpi-grid">
           <div className="kpi-card">
             <div className="kpi-label">
-              <Users size={14} style={{ color: "var(--acid)" }} />
+              <Users size={14} style={{ color: "#ff238f" }} />
               Total Profiles
             </div>
             <div className="kpi-value">{profiles.length}</div>
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <QrCode size={14} style={{ color: "var(--cyan)" }} />
+              <QrCode size={14} style={{ color: "#ff238f" }} />
               Total Check-ins
             </div>
             <div className="kpi-value">{checkIns.length}</div>
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <Sparkles size={14} style={{ color: "var(--mag)" }} />
+              <Sparkles size={14} style={{ color: "#ff238f" }} />
               Programme Events
             </div>
             <div className="kpi-value">{events}</div>
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
                 gap: "0.5rem"
               }}
             >
-              <Activity size={16} style={{ color: "var(--acid)" }} />
+              <Activity size={16} style={{ color: "#ff238f" }} />
               <h3 style={{ fontSize: "1.05rem" }}>Live Security & System Logs</h3>
             </div>
 
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <Users size={14} style={{ color: "var(--acid)" }} />
+                <Users size={14} style={{ color: "#ff238f" }} />
                 <span>CL/ACL Meet</span>
               </Link>
               <Link
@@ -226,7 +226,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <Shield size={14} style={{ color: "var(--mag)" }} />
+                <Shield size={14} style={{ color: "#ff238f" }} />
                 <span>Scoring & Bids</span>
               </Link>
               <Link
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <Gavel size={14} style={{ color: "var(--cyan)" }} />
+                <Gavel size={14} style={{ color: "#ff238f" }} />
                 <span>Judge Portal</span>
               </Link>
               <Link
@@ -250,7 +250,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <Ticket size={14} style={{ color: "var(--acid)" }} />
+                <Ticket size={14} style={{ color: "#ff238f" }} />
                 <span>Accreditation</span>
               </Link>
               <Link
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <ClipboardList size={14} style={{ color: "var(--cyan)" }} />
+                <ClipboardList size={14} style={{ color: "#ff238f" }} />
                 <span>Audit Trail</span>
               </Link>
               <Link
@@ -274,7 +274,7 @@ export default function AdminDashboard() {
                 className="btn btn-secondary btn-sm"
                 style={{ justifyContent: "flex-start", gap: "0.5rem" }}
               >
-                <QrCode size={14} style={{ color: "var(--acid)" }} />
+                <QrCode size={14} style={{ color: "#ff238f" }} />
                 <span>Gate Scanner</span>
               </Link>
             </div>

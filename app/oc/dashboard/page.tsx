@@ -71,7 +71,7 @@ export default function OcDashboard() {
             value={checkIns.length}
             subtext="All checkpoints captured"
             icon={QrCode}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Campus Gate Entries"
@@ -85,7 +85,7 @@ export default function OcDashboard() {
             value={eventEntries}
             subtext="Venue & vertical check-ins"
             icon={Layers}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Scanner Connection"
@@ -102,7 +102,7 @@ export default function OcDashboard() {
             className="card"
             style={{
               background: "linear-gradient(135deg, rgba(24, 22, 34, 0.95) 0%, rgba(18, 16, 25, 0.95) 100%)",
-              border: "1px solid rgba(216, 255, 46, 0.3)",
+              border: "1px solid rgba(255, 35, 143, 0.15)",
               boxShadow: "var(--shadow-md)"
             }}
           >
@@ -123,11 +123,11 @@ export default function OcDashboard() {
                 </h2>
                 <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap", fontSize: "0.85rem", color: "var(--bone-dim)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                    <MapPin size={14} style={{ color: "var(--acid)" }} />
+                    <MapPin size={14} style={{ color: "#ff238f" }} />
                     <span>Venue: <b style={{ color: "var(--bone)" }}>{active.venue}</b></span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                    <Clock size={14} style={{ color: "var(--cyan)" }} />
+                    <Clock size={14} style={{ color: "#ff238f" }} />
                     <span>
                       Reporting:{" "}
                       <b style={{ color: "var(--bone)" }}>
@@ -186,7 +186,7 @@ export default function OcDashboard() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Activity size={16} style={{ color: "var(--acid)" }} />
+                <Activity size={16} style={{ color: "#ff238f" }} />
                 <h3 style={{ fontSize: "1.05rem" }}>Live Gate &amp; Checkpoint Activity</h3>
               </div>
               <Link href="/oc/check-ins" className="btn btn-ghost btn-sm" style={{ gap: "0.3rem" }}>
@@ -253,7 +253,7 @@ export default function OcDashboard() {
         {activeTab === "protocol" && (
           <div className="card">
             <h3 style={{ fontSize: "1.15rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <ShieldCheck size={18} style={{ color: "var(--acid)" }} />
+              <ShieldCheck size={18} style={{ color: "#ff238f" }} />
               Scanner Operator Guidelines &amp; Protocol
             </h3>
 
@@ -266,7 +266,7 @@ export default function OcDashboard() {
                   border: "1px solid var(--line)"
                 }}
               >
-                <div className="mono" style={{ color: "var(--acid)", fontWeight: 700, fontSize: "0.9rem" }}>
+                <div className="mono" style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.9rem" }}>
                   01 · Optical QR Scan
                 </div>
                 <h4 style={{ fontSize: "0.95rem", margin: "0.35rem 0" }}>Frame &amp; Capture</h4>
@@ -284,7 +284,7 @@ export default function OcDashboard() {
                   border: "1px solid var(--line)"
                 }}
               >
-                <div className="mono" style={{ color: "var(--cyan)", fontWeight: 700, fontSize: "0.9rem" }}>
+                <div className="mono" style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.9rem" }}>
                   02 · Server Verification
                 </div>
                 <h4 style={{ fontSize: "0.95rem", margin: "0.35rem 0" }}>Status &amp; Event Scope</h4>
@@ -302,7 +302,7 @@ export default function OcDashboard() {
                   border: "1px solid var(--line)"
                 }}
               >
-                <div className="mono" style={{ color: "var(--mag)", fontWeight: 700, fontSize: "0.9rem" }}>
+                <div className="mono" style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.9rem" }}>
                   03 · Atomic Log
                 </div>
                 <h4 style={{ fontSize: "0.95rem", margin: "0.35rem 0" }}>Duplicate Prevention</h4>
@@ -337,7 +337,7 @@ export default function OcDashboard() {
               </div>
               <div>
                 <div style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Cryptographic Token Verifier</div>
-                <div style={{ fontSize: "0.9rem", color: "var(--acid)", fontWeight: 600 }}>HMAC-SHA256 Ready</div>
+                <div style={{ fontSize: "0.9rem", color: "#ff238f", fontWeight: 600 }}>HMAC-SHA256 Ready</div>
               </div>
               <div>
                 <div style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Auditing Sink</div>
@@ -345,7 +345,7 @@ export default function OcDashboard() {
               </div>
               <div>
                 <div style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Current Shift Operator</div>
-                <div style={{ fontSize: "0.9rem", color: "var(--cyan)", fontWeight: 600 }}>OC Desk Lead (Dev Patel)</div>
+                <div style={{ fontSize: "0.9rem", color: "#ff238f", fontWeight: 600 }}>OC Desk Lead (Dev Patel)</div>
               </div>
             </div>
           </div>

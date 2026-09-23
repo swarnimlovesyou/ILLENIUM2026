@@ -110,7 +110,7 @@ export default function CheckInsPage() {
             value={logs.length}
             subtext="Validated attendance scans"
             icon={QrCode}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Main Campus Gate"
@@ -124,7 +124,7 @@ export default function CheckInsPage() {
             value={venueEntries.length}
             subtext="Auditorium & Quad entries"
             icon={MapPin}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Special Desks"
@@ -217,7 +217,7 @@ export default function CheckInsPage() {
                           borderRadius: "var(--radius-sm)",
                           background: "rgba(255, 255, 255, 0.05)",
                           fontSize: "0.75rem",
-                          color: "var(--acid)",
+                          color: "#ff238f",
                           fontWeight: 600,
                           border: "1px solid var(--line)"
                         }}

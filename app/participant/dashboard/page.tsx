@@ -116,9 +116,9 @@ export default function ParticipantDashboard() {
                   fontWeight: 700,
                   padding: "0.15rem 0.5rem",
                   borderRadius: "999px",
-                  background: "rgba(216, 255, 46, 0.15)",
-                  color: "var(--acid)",
-                  border: "1px solid rgba(216, 255, 46, 0.3)"
+                  background: "rgba(255, 35, 143, 0.15)",
+                  color: "#ff238f",
+                  border: "1px solid rgba(255, 35, 143, 0.4)"
                 }}
               >
                 VERIFIED ACTIVE
@@ -191,8 +191,8 @@ export default function ParticipantDashboard() {
             Identity Verification
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginTop: "0.35rem" }}>
-            <CheckCircle2 size={18} style={{ color: "var(--acid)" }} />
-            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--acid)", textTransform: "capitalize" }}>
+            <CheckCircle2 size={18} style={{ color: "#ff238f" }} />
+            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#ff238f", textTransform: "capitalize" }}>
               {profile?.verificationStatus ?? "Verified"}
             </span>
           </div>
@@ -205,7 +205,7 @@ export default function ParticipantDashboard() {
           <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--dim)", fontWeight: 600 }}>
             Scanned Check-ins
           </div>
-          <div className="mono" style={{ fontSize: "1.35rem", fontWeight: 700, color: "var(--cyan)", marginTop: "0.35rem" }}>
+          <div className="mono" style={{ fontSize: "1.35rem", fontWeight: 700, color: "#ff238f", marginTop: "0.35rem" }}>
             {checkIns} Check-in{checkIns === 1 ? "" : "s"}
           </div>
           <div style={{ fontSize: "0.75rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
@@ -281,9 +281,9 @@ export default function ParticipantDashboard() {
                       <span
                         className="badge"
                         style={{
-                          background: "rgba(216, 255, 46, 0.15)",
-                          color: "var(--acid)",
-                          border: "1px solid rgba(216, 255, 46, 0.3)",
+                          background: "rgba(255, 35, 143, 0.12)",
+                          color: "#ff238f",
+                          border: "1px solid rgba(255, 35, 143, 0.35)",
                           fontSize: "0.7rem",
                           textTransform: "uppercase"
                         }}
@@ -326,13 +326,13 @@ export default function ParticipantDashboard() {
             </p>
           </div>
           <div style={{ padding: "1rem", borderRadius: "8px", background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)" }}>
-            <strong style={{ color: "var(--acid)", display: "block", marginBottom: "0.25rem" }}>02. Event Reporting Windows</strong>
+            <strong style={{ color: "#ff238f", display: "block", marginBottom: "0.25rem" }}>02. Event Reporting Windows</strong>
             <p style={{ margin: 0, color: "var(--bone-dim)", fontSize: "0.825rem", lineHeight: 1.5 }}>
               Check reporting times in the timetable. Teams arriving after initial roll-call scan will forfeit performance priority slot.
             </p>
           </div>
           <div style={{ padding: "1rem", borderRadius: "8px", background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)" }}>
-            <strong style={{ color: "var(--cyan)", display: "block", marginBottom: "0.25rem" }}>03. Operations &amp; Support</strong>
+            <strong style={{ color: "#f5f3ed", display: "block", marginBottom: "0.25rem" }}>03. Operations &amp; Support</strong>
             <p style={{ margin: 0, color: "var(--bone-dim)", fontSize: "0.825rem", lineHeight: 1.5 }}>
               Need urgent help? Locate the Central OC Desk at Atrium Ground or contact events.illenium@atlasskilltech.university.
             </p>

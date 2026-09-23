@@ -128,11 +128,11 @@ function ScannerContent() {
                 gap: "0.4rem",
                 padding: "0.2rem 0.6rem",
                 borderRadius: "999px",
-                background: "rgba(0, 229, 255, 0.1)",
-                border: "1px solid rgba(0, 229, 255, 0.3)",
+                background: "rgba(255, 35, 143, 0.15)",
+                border: "1px solid rgba(255, 35, 143, 0.15)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
-                color: "var(--cyan)",
+                color: "#ff238f",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
                 marginBottom: "0.5rem"
@@ -177,7 +177,7 @@ function ScannerContent() {
           <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div className="card-header" style={{ marginBottom: 0 }}>
               <h3 className="card-title">
-                <Camera size={18} style={{ color: "var(--cyan)" }} />
+                <Camera size={18} style={{ color: "#ff238f" }} />
                 Camera Feed
               </h3>
               <span className={`badge ${scanning ? "badge-acid" : "badge-neutral"}`}>
@@ -212,7 +212,7 @@ function ScannerContent() {
                   position: "absolute",
                   width: "180px",
                   height: "180px",
-                  border: "2px dashed var(--acid)",
+                  border: "2px dashed #ff238f",
                   borderRadius: "12px",
                   pointerEvents: "none",
                   boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.45)"
@@ -261,9 +261,9 @@ function ScannerContent() {
                 style={{
                   padding: "0.75rem 1rem",
                   borderRadius: "var(--radius-sm)",
-                  background: "rgba(255, 45, 111, 0.1)",
-                  border: "1px solid rgba(255, 45, 111, 0.3)",
-                  color: "var(--mag)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
+                  color: "#ff238f",
                   fontSize: "0.8rem",
                   display: "flex",
                   alignItems: "center",
@@ -282,7 +282,7 @@ function ScannerContent() {
             <div className="card">
               <div className="card-header">
                 <h3 className="card-title">
-                  <Search size={18} style={{ color: "var(--acid)" }} />
+                  <Search size={18} style={{ color: "#ff238f" }} />
                   Manual ID or Token Verification
                 </h3>
               </div>
@@ -316,16 +316,16 @@ function ScannerContent() {
                 style={{
                   borderColor:
                     valid || result.status === "checked_in"
-                      ? "rgba(216, 255, 46, 0.4)"
+                      ? "rgba(255, 35, 143, 0.15)"
                       : result.status === "already_checked_in"
                       ? "rgba(245, 158, 11, 0.4)"
-                      : "rgba(255, 45, 111, 0.4)",
+                      : "rgba(255, 35, 143, 0.15)",
                   background:
                     valid || result.status === "checked_in"
-                      ? "rgba(216, 255, 46, 0.05)"
+                      ? "rgba(255, 35, 143, 0.15)"
                       : result.status === "already_checked_in"
                       ? "rgba(245, 158, 11, 0.05)"
-                      : "rgba(255, 45, 111, 0.05)"
+                      : "rgba(255, 35, 143, 0.15)"
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
@@ -352,7 +352,7 @@ function ScannerContent() {
                     </div>
                     <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", fontSize: "0.85rem", color: "var(--bone-dim)" }}>
                       <span style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                        <User size={13} style={{ color: "var(--acid)" }} />
+                        <User size={13} style={{ color: "#ff238f" }} />
                         <span className="mono">{result.participant.illenium_id}</span>
                       </span>
                       <span style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>

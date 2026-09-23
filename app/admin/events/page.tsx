@@ -111,21 +111,21 @@ export default function EventsAdminPage() {
             value={events.length}
             subtext="Official festival events"
             icon={Sparkles}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Open / Scheduled"
             value={openEvents.length}
             subtext="Ready for staging"
             icon={Calendar}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Live Ongoing"
             value={inProgressEvents.length}
             subtext="On-stage in progress"
             icon={Play}
-            color="var(--mag)"
+            color="#ff238f"
           />
           <MetricCard
             label="Sealed & Locked"
@@ -196,11 +196,11 @@ export default function EventsAdminPage() {
                         style={{
                           padding: "0.2rem 0.5rem",
                           borderRadius: "var(--radius-sm)",
-                          background: "rgba(216, 255, 46, 0.1)",
+                          background: "rgba(255, 35, 143, 0.15)",
                           fontSize: "0.75rem",
-                          color: "var(--acid)",
+                          color: "#ff238f",
                           fontWeight: 700,
-                          border: "1px solid rgba(216, 255, 46, 0.3)"
+                          border: "1px solid rgba(255, 35, 143, 0.15)"
                         }}
                       >
                         {row.code}
@@ -227,7 +227,7 @@ export default function EventsAdminPage() {
 
                     <td>
                       <div style={{ fontSize: "0.85rem", color: "var(--bone)", display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                        <MapPin size={12} style={{ color: "var(--acid)" }} />
+                        <MapPin size={12} style={{ color: "#ff238f" }} />
                         {row.venue}
                       </div>
                       <div className="mono" style={{ fontSize: "0.7rem", color: "var(--dim)", marginTop: "0.15rem" }}>
@@ -281,7 +281,7 @@ export default function EventsAdminPage() {
                             style={{ gap: "0.3rem" }}
                             onClick={() => changeStatus(row.id, "in_progress")}
                           >
-                            <Play size={12} style={{ color: "var(--acid)" }} />
+                            <Play size={12} style={{ color: "#ff238f" }} />
                             <span>Start</span>
                           </button>
                         ) : row.status === "in_progress" ? (
@@ -296,7 +296,7 @@ export default function EventsAdminPage() {
                         ) : row.status === "completed" ? (
                           <button
                             className="btn btn-secondary btn-sm"
-                            style={{ gap: "0.3rem", color: "var(--mag)", borderColor: "rgba(255, 45, 111, 0.4)" }}
+                            style={{ gap: "0.3rem", color: "#ff238f", borderColor: "rgba(255, 35, 143, 0.15)" }}
                             onClick={() => changeStatus(row.id, "locked")}
                           >
                             <Lock size={12} />
@@ -376,7 +376,7 @@ export default function EventsAdminPage() {
             >
               <div className="card-header">
                 <div>
-                  <span className="mono" style={{ fontSize: "0.75rem", color: "var(--acid)" }}>
+                  <span className="mono" style={{ fontSize: "0.75rem", color: "#ff238f" }}>
                     {selectedEventForDetail.code} · Operational Dossier
                   </span>
                   <h3 className="card-title" style={{ marginTop: "0.2rem" }}>
@@ -457,7 +457,7 @@ export default function EventsAdminPage() {
                             )}
                           </div>
                           <div style={{ textAlign: "right" }}>
-                            <div className="mono" style={{ fontSize: "0.85rem", color: "var(--acid)", fontWeight: 700 }}>
+                            <div className="mono" style={{ fontSize: "0.85rem", color: "#ff238f", fontWeight: 700 }}>
                               / {crit.maxScore} pts
                             </div>
                             <span className="badge badge-neutral" style={{ fontSize: "0.65rem" }}>

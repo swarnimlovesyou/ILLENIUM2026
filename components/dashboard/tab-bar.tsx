@@ -60,8 +60,8 @@ export function TabBar({ tabs, activeTab, onChange }: TabBarProps) {
                   fontSize: "0.7rem",
                   padding: "0.1rem 0.45rem",
                   borderRadius: "999px",
-                  background: isActive ? "rgba(216, 255, 46, 0.15)" : "rgba(255, 255, 255, 0.06)",
-                  color: isActive ? "var(--acid)" : "var(--bone-dim)",
+                  background: isActive ? "rgba(255, 35, 143, 0.15)" : "rgba(255, 255, 255, 0.06)",
+                  color: isActive ? "#ff238f" : "var(--bone-dim)",
                   fontWeight: 600,
                   fontFamily: "var(--font-mono)"
                 }}

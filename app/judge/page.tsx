@@ -151,11 +151,11 @@ export default function JudgePortalPage() {
                 gap: "0.4rem",
                 padding: "0.2rem 0.6rem",
                 borderRadius: "999px",
-                background: "rgba(255, 45, 111, 0.1)",
-                border: "1px solid rgba(255, 45, 111, 0.3)",
+                background: "rgba(255, 35, 143, 0.15)",
+                border: "1px solid rgba(255, 35, 143, 0.15)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
-                color: "var(--mag)",
+                color: "#ff238f",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
                 marginBottom: "0.5rem"
@@ -181,7 +181,7 @@ export default function JudgePortalPage() {
               border: "1px solid var(--line)"
             }}
           >
-            <ShieldCheck size={16} style={{ color: "var(--acid)" }} />
+            <ShieldCheck size={16} style={{ color: "#ff238f" }} />
             <span style={{ fontSize: "0.8rem", color: "var(--bone)", fontWeight: 600 }}>
               Judge Vikramaditya Sen
             </span>
@@ -197,9 +197,9 @@ export default function JudgePortalPage() {
             style={{
               padding: "1rem 1.25rem",
               borderRadius: "var(--radius-md)",
-              background: isDraft ? "rgba(245, 158, 11, 0.1)" : "rgba(216, 255, 46, 0.1)",
-              border: isDraft ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(216, 255, 46, 0.3)",
-              color: isDraft ? "var(--warning)" : "var(--acid)",
+              background: isDraft ? "rgba(245, 158, 11, 0.1)" : "rgba(255, 35, 143, 0.15)",
+              border: isDraft ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(255, 35, 143, 0.15)",
+              color: isDraft ? "var(--warning)" : "#ff238f",
               display: "flex",
               alignItems: "center",
               gap: "0.75rem"
@@ -271,7 +271,7 @@ export default function JudgePortalPage() {
                 }}
               >
                 <span>Format: <b style={{ color: "var(--bone)" }}>{selectedEvent?.eventType.toUpperCase() || "SOLO"}</b></span>
-                <span>Scale: <b style={{ color: "var(--acid)" }}>0 to 100</b></span>
+                <span>Scale: <b style={{ color: "#ff238f" }}>0 to 100</b></span>
               </div>
             </div>
           </div>
@@ -317,7 +317,7 @@ export default function JudgePortalPage() {
                   fontFamily: "var(--font-display)",
                   fontSize: "2rem",
                   fontWeight: 700,
-                  color: "var(--acid)",
+                  color: "#ff238f",
                   lineHeight: 1.1
                 }}
               >
@@ -355,7 +355,7 @@ export default function JudgePortalPage() {
                 >
                   <div style={{ flex: 1, minWidth: "260px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span className="mono" style={{ color: "var(--acid)", fontWeight: 700 }}>
+                      <span className="mono" style={{ color: "#ff238f", fontWeight: 700 }}>
                         #{String(index + 1).padStart(2, "0")}
                       </span>
                       <span style={{ fontWeight: 600, color: "var(--bone)", fontSize: "1rem" }}>
@@ -396,7 +396,7 @@ export default function JudgePortalPage() {
                           textAlign: "center",
                           fontSize: "1.25rem",
                           fontWeight: 700,
-                          color: "var(--acid)",
+                          color: "#ff238f",
                           background: "transparent",
                           border: "none",
                           outline: "none",

@@ -90,7 +90,7 @@ export default function ParticipantsPage() {
             value={list.length}
             subtext="Registered fest attendees"
             icon={Users}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Verified Profiles"
@@ -111,7 +111,7 @@ export default function ParticipantsPage() {
             value={leaders.length}
             subtext="CL, ACL, OC, and judges"
             icon={Shield}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Institutions"
@@ -186,7 +186,7 @@ export default function ParticipantsPage() {
                           borderRadius: "var(--radius-sm)",
                           background: "rgba(255, 255, 255, 0.05)",
                           fontSize: "0.75rem",
-                          color: "var(--acid)",
+                          color: "#ff238f",
                           fontWeight: 600,
                           border: "1px solid var(--line)"
                         }}
@@ -213,9 +213,9 @@ export default function ParticipantsPage() {
                             row.role === "cl" || row.role === "acl"
                               ? "var(--gold)"
                               : row.role === "oc"
-                              ? "var(--acid)"
+                              ? "#ff238f"
                               : row.role === "judge"
-                              ? "var(--cyan)"
+                              ? "#ff238f"
                               : "var(--bone-dim)"
                         }}
                       >
@@ -319,7 +319,7 @@ export default function ParticipantsPage() {
             >
               <div className="card-header">
                 <h3 className="card-title">
-                  <CreditCard size={16} style={{ color: "var(--acid)" }} />
+                  <CreditCard size={16} style={{ color: "#ff238f" }} />
                   Participant Identity Dossier
                 </h3>
                 <button
@@ -354,7 +354,7 @@ export default function ParticipantsPage() {
                 >
                   <div>
                     <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Permanent UID</div>
-                    <div className="mono" style={{ fontSize: "0.9rem", color: "var(--acid)", fontWeight: 700 }}>
+                    <div className="mono" style={{ fontSize: "0.9rem", color: "#ff238f", fontWeight: 700 }}>
                       {inspectProfile.illeniumId}
                     </div>
                   </div>

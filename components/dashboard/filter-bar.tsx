@@ -134,7 +134,7 @@ export function FilterBar({
             type="button"
             onClick={onClear}
             className="btn btn-ghost btn-sm"
-            style={{ fontSize: "0.75rem", color: "var(--mag)", padding: "0.4rem 0.6rem" }}
+            style={{ fontSize: "0.75rem", color: "#ff238f", padding: "0.4rem 0.6rem" }}
           >
             Reset Filters
           </button>

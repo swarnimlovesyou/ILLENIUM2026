@@ -46,7 +46,7 @@ export function PublicNav() {
               width: "26px",
               height: "26px",
               borderRadius: "4px",
-              background: "var(--acid)",
+              background: "#ff238f",
               color: "var(--ink)",
               display: "flex",
               alignItems: "center",
@@ -92,7 +92,7 @@ export function PublicNav() {
               style={{
                 fontSize: "0.9rem",
                 fontWeight: 600,
-                color: pathname.startsWith(link.href) ? "var(--acid)" : "var(--bone-dim)",
+                color: pathname.startsWith(link.href) ? "#ff238f" : "var(--bone-dim)",
                 transition: "color 0.15s ease"
               }}
             >

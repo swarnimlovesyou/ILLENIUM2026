@@ -79,11 +79,11 @@ export default function ParticipantBiddingPage() {
               gap: "0.4rem",
               padding: "0.2rem 0.6rem",
               borderRadius: "999px",
-              background: "rgba(216, 255, 46, 0.1)",
-              border: "1px solid rgba(216, 255, 46, 0.3)",
+              background: "rgba(255, 35, 143, 0.15)",
+              border: "1px solid rgba(255, 35, 143, 0.15)",
               fontSize: "0.75rem",
               fontWeight: 600,
-              color: "var(--acid)",
+              color: "#ff238f",
               letterSpacing: "0.04em",
               textTransform: "uppercase",
               marginBottom: "0.5rem"
@@ -102,7 +102,7 @@ export default function ParticipantBiddingPage() {
         <div className="kpi-grid">
           <div className="kpi-card">
             <div className="kpi-label">
-              <Sparkles size={14} style={{ color: "var(--acid)" }} />
+              <Sparkles size={14} style={{ color: "#ff238f" }} />
               Eligible Events
             </div>
             <div className="kpi-value">{events.length}</div>
@@ -110,10 +110,10 @@ export default function ParticipantBiddingPage() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <Lock size={14} style={{ color: "var(--cyan)" }} />
+              <Lock size={14} style={{ color: "#ff238f" }} />
               Active Predictions
             </div>
-            <div className="kpi-value" style={{ color: "var(--acid)" }}>
+            <div className="kpi-value" style={{ color: "#ff238f" }}>
               {bids.length}
             </div>
             <div className="kpi-subtext">Confirmed rank forecasts</div>
@@ -130,10 +130,10 @@ export default function ParticipantBiddingPage() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <AlertTriangle size={14} style={{ color: "var(--mag)" }} />
+              <AlertTriangle size={14} style={{ color: "#ff238f" }} />
               Risk Exposure
             </div>
-            <div className="kpi-value" style={{ color: "var(--mag)" }}>
+            <div className="kpi-value" style={{ color: "#ff238f" }}>
               -20 PTS
             </div>
             <div className="kpi-subtext">Penalty on missed outcome</div>
@@ -145,9 +145,9 @@ export default function ParticipantBiddingPage() {
             style={{
               padding: "0.85rem 1.25rem",
               borderRadius: "var(--radius-sm)",
-              background: "rgba(216, 255, 46, 0.1)",
-              border: "1px solid rgba(216, 255, 46, 0.3)",
-              color: "var(--acid)",
+              background: "rgba(255, 35, 143, 0.15)",
+              border: "1px solid rgba(255, 35, 143, 0.15)",
+              color: "#ff238f",
               fontSize: "0.875rem",
               display: "flex",
               alignItems: "center",
@@ -164,7 +164,7 @@ export default function ParticipantBiddingPage() {
           <div className="card-header">
             <div>
               <h3 className="card-title">
-                <Lock size={18} style={{ color: "var(--acid)" }} />
+                <Lock size={18} style={{ color: "#ff238f" }} />
                 Submit Contingent Forecast
               </h3>
               <p style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.2rem" }}>
@@ -317,9 +317,9 @@ export default function ParticipantBiddingPage() {
                               fontWeight: 700,
                               color:
                                 b.pointsAwarded > 0
-                                  ? "var(--acid)"
+                                  ? "#ff238f"
                                   : b.pointsAwarded < 0
-                                  ? "var(--mag)"
+                                  ? "#ff238f"
                                   : "var(--bone-dim)"
                             }}
                           >

@@ -126,8 +126,8 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: role === "admin" ? "var(--mag)" : role === "judge" ? "var(--cyan)" : "var(--acid)",
-                  boxShadow: `0 0 8px ${role === "admin" ? "var(--mag)" : role === "judge" ? "var(--cyan)" : "var(--acid)"}`
+                  background: role === "admin" ? "#ff238f" : role === "judge" ? "#ff238f" : "#ff238f",
+                  boxShadow: `0 0 8px ${role === "admin" ? "#ff238f" : role === "judge" ? "#ff238f" : "#ff238f"}`
                 }}
               />
               <div style={{ display: "flex", flexDirection: "column" }}>
@@ -179,7 +179,7 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
                     <IconComponent
                       size={16}
                       style={{
-                        color: isSelected ? "var(--acid)" : "var(--bone-dim)"
+                        color: isSelected ? "#ff238f" : "var(--bone-dim)"
                       }}
                     />
                     <span>{item.label}</span>
@@ -210,7 +210,7 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
             <button
               onClick={signOut}
               className="btn btn-ghost btn-sm"
-              style={{ justifyContent: "flex-start", gap: "0.6rem", color: "var(--mag)" }}
+              style={{ justifyContent: "flex-start", gap: "0.6rem", color: "#ff238f" }}
             >
               <LogOut size={14} />
               <span>Sign Out</span>

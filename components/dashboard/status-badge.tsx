@@ -38,9 +38,9 @@ export function StatusBadge({ label, variant = "neutral", dot = true }: StatusBa
   const getCustomStyle = (): React.CSSProperties => {
     if (variant === "cyan") {
       return {
-        background: "rgba(0, 229, 255, 0.12)",
-        color: "var(--cyan)",
-        border: "1px solid rgba(0, 229, 255, 0.3)"
+        background: "rgba(255, 35, 143, 0.15)",
+        color: "#ff238f",
+        border: "1px solid rgba(255, 35, 143, 0.15)"
       };
     }
     if (variant === "warning") {
@@ -56,15 +56,15 @@ export function StatusBadge({ label, variant = "neutral", dot = true }: StatusBa
   const getDotColor = () => {
     switch (variant) {
       case "acid":
-        return "var(--acid)";
+        return "#ff238f";
       case "success":
         return "var(--success)";
       case "warning":
         return "var(--warning)";
       case "crimson":
-        return "var(--mag)";
+        return "#ff238f";
       case "cyan":
-        return "var(--cyan)";
+        return "#ff238f";
       case "gold":
         return "var(--gold)";
       default:

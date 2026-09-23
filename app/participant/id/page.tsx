@@ -61,9 +61,9 @@ export default function DigitalIdPage() {
             style={{
               padding: "0.4rem 0.9rem",
               borderRadius: "999px",
-              background: isVerified ? "rgba(216, 255, 46, 0.12)" : "rgba(255, 159, 28, 0.12)",
-              border: `1px solid ${isVerified ? "rgba(216, 255, 46, 0.35)" : "rgba(255, 159, 28, 0.35)"}`,
-              color: isVerified ? "var(--acid)" : "var(--warning)",
+              background: isVerified ? "rgba(255, 35, 143, 0.15)" : "rgba(255, 123, 0, 0.12)",
+              border: `1px solid ${isVerified ? "rgba(255, 35, 143, 0.45)" : "rgba(255, 123, 0, 0.35)"}`,
+              color: isVerified ? "#ff238f" : "#ff7b00",
               fontSize: "0.75rem",
               fontWeight: 700,
               display: "flex",
@@ -145,7 +145,7 @@ export default function DigitalIdPage() {
                 <Building2 size={13} style={{ color: "#ff238f" }} />
                 <span>{profile?.collegeName ?? "Atlas SkillTech University"}</span>
               </div>
-              <div className="mono" style={{ fontSize: "0.85rem", color: "var(--acid)", fontWeight: 700, marginTop: "0.25rem" }}>
+              <div className="mono" style={{ fontSize: "0.85rem", color: "#ff238f", fontWeight: 700, marginTop: "0.25rem" }}>
                 ID: {profile?.illeniumId ?? "ILL-26-000001"}
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function DigitalIdPage() {
             </div>
             <div>
               <div style={{ fontSize: "0.65rem", textTransform: "uppercase", color: "var(--dim)", fontWeight: 700 }}>QR CRYPTO STATUS</div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 700, color: qrData ? "var(--acid)" : "var(--bone-dim)" }}>
+              <div style={{ fontSize: "0.85rem", fontWeight: 700, color: qrData ? "#ff238f" : "var(--bone-dim)" }}>
                 {qrData ? "Valid & Active" : "Issued after approval"}
               </div>
             </div>
@@ -232,7 +232,7 @@ export default function DigitalIdPage() {
               </div>
 
               <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                <span className="mono" style={{ color: "var(--acid)", fontWeight: 800, fontSize: "1.1rem", lineHeight: 1 }}>02</span>
+                <span className="mono" style={{ color: "#ff238f", fontWeight: 800, fontSize: "1.1rem", lineHeight: 1 }}>02</span>
                 <div>
                   <strong style={{ color: "#f2f0e9", fontSize: "0.9rem" }}>Competition Arena Check-in</strong>
                   <p style={{ margin: "0.2rem 0 0", color: "var(--bone-dim)", fontSize: "0.8rem", lineHeight: 1.5 }}>
@@ -242,7 +242,7 @@ export default function DigitalIdPage() {
               </div>
 
               <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                <span className="mono" style={{ color: "var(--cyan)", fontWeight: 800, fontSize: "1.1rem", lineHeight: 1 }}>03</span>
+                <span className="mono" style={{ color: "#f5f3ed", fontWeight: 800, fontSize: "1.1rem", lineHeight: 1 }}>03</span>
                 <div>
                   <strong style={{ color: "#f2f0e9", fontSize: "0.9rem" }}>Live Results &amp; Trophy Points</strong>
                   <p style={{ margin: "0.2rem 0 0", color: "var(--bone-dim)", fontSize: "0.8rem", lineHeight: 1.5 }}>

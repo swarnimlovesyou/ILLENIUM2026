@@ -15,11 +15,11 @@ export default function AboutPage() {
             gap: "0.4rem",
             padding: "0.25rem 0.75rem",
             borderRadius: "999px",
-            background: "rgba(216, 255, 46, 0.1)",
-            border: "1px solid rgba(216, 255, 46, 0.3)",
+            background: "rgba(255, 35, 143, 0.15)",
+            border: "1px solid rgba(255, 35, 143, 0.15)",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "var(--acid)",
+            color: "#ff238f",
             letterSpacing: "0.05em",
             textTransform: "uppercase",
             marginBottom: "1rem"
@@ -30,7 +30,7 @@ export default function AboutPage() {
         </div>
 
         <h1 style={{ fontSize: "clamp(2.75rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.05, margin: 0 }}>
-          A festival <span style={{ color: "var(--acid)" }}>with a pulse.</span>
+          A festival <span style={{ color: "#ff238f" }}>with a pulse.</span>
         </h1>
 
         <p style={{ marginTop: "1rem", fontSize: "1.15rem", color: "var(--bone-dim)", lineHeight: 1.7, maxWidth: "760px" }}>
@@ -48,7 +48,7 @@ export default function AboutPage() {
           }}
         >
           <div className="card" style={{ padding: "1.75rem", background: "var(--bg-surface)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--acid)", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#ff238f", marginBottom: "0.75rem" }}>
               <MapPin size={18} />
               <h3 style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "var(--bone)" }}>Where</h3>
             </div>
@@ -56,12 +56,12 @@ export default function AboutPage() {
               Atlas SkillTech University<br />
               Equinox Business Park, Ambedkar Nagar<br />
               Kurla West, Mumbai 400070<br />
-              <span style={{ color: "var(--acid)", fontSize: "0.8rem", fontWeight: 600 }}>Nearest Station: Kurla</span>
+              <span style={{ color: "#ff238f", fontSize: "0.8rem", fontWeight: 600 }}>Nearest Station: Kurla</span>
             </p>
           </div>
 
           <div className="card" style={{ padding: "1.75rem", background: "var(--bg-surface)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--cyan)", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#ff238f", marginBottom: "0.75rem" }}>
               <Calendar size={18} />
               <h3 style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "var(--bone)" }}>When</h3>
             </div>
@@ -73,7 +73,7 @@ export default function AboutPage() {
           </div>
 
           <div className="card" style={{ padding: "1.75rem", background: "var(--bg-surface)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--mag)", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#ff238f", marginBottom: "0.75rem" }}>
               <Mail size={18} />
               <h3 style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "var(--bone)" }}>Official Outreach</h3>
             </div>

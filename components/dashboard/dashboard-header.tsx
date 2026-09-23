@@ -22,30 +22,30 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const accentColor =
     accent === "mag"
-      ? "var(--mag)"
+      ? "#ff238f"
       : accent === "cyan"
-      ? "var(--cyan)"
+      ? "#ff238f"
       : accent === "gold"
       ? "var(--gold)"
-      : "var(--acid)";
+      : "#ff238f";
 
   const accentBg =
     accent === "mag"
-      ? "rgba(255, 45, 111, 0.1)"
+      ? "rgba(255, 35, 143, 0.15)"
       : accent === "cyan"
-      ? "rgba(0, 229, 255, 0.1)"
+      ? "rgba(255, 35, 143, 0.15)"
       : accent === "gold"
       ? "rgba(255, 200, 55, 0.1)"
-      : "rgba(216, 255, 46, 0.1)";
+      : "rgba(255, 35, 143, 0.15)";
 
   const accentBorder =
     accent === "mag"
-      ? "rgba(255, 45, 111, 0.3)"
+      ? "rgba(255, 35, 143, 0.15)"
       : accent === "cyan"
-      ? "rgba(0, 229, 255, 0.3)"
+      ? "rgba(255, 35, 143, 0.15)"
       : accent === "gold"
       ? "rgba(255, 200, 55, 0.3)"
-      : "rgba(216, 255, 46, 0.3)";
+      : "rgba(255, 35, 143, 0.15)";
 
   return (
     <div

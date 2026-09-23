@@ -150,7 +150,7 @@ export default function ContingentsPage() {
             value={contingents.length}
             subtext="Colleges on active roster"
             icon={Building}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="CLs Accredited"
@@ -164,7 +164,7 @@ export default function ContingentsPage() {
             value={acls.length}
             subtext="Assistant leaders present"
             icon={Shield}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Code Allocation"
@@ -180,7 +180,7 @@ export default function ContingentsPage() {
           <div className="card" style={{ animation: "fadeIn 0.2s ease" }}>
             <div className="card-header">
               <h3 className="card-title">
-                <Sparkles size={16} style={{ color: "var(--acid)" }} />
+                <Sparkles size={16} style={{ color: "#ff238f" }} />
                 Allocate Contingent Code (CL Meet)
               </h3>
               <span className="mono" style={{ fontSize: "0.75rem", color: "var(--dim)" }}>
@@ -321,11 +321,11 @@ export default function ContingentsPage() {
                           style={{
                             padding: "0.25rem 0.55rem",
                             borderRadius: "var(--radius-sm)",
-                            background: "rgba(216, 255, 46, 0.12)",
-                            color: "var(--acid)",
+                            background: "rgba(255, 35, 143, 0.15)",
+                            color: "#ff238f",
                             fontWeight: 700,
                             fontSize: "0.8rem",
-                            border: "1px solid rgba(216, 255, 46, 0.3)"
+                            border: "1px solid rgba(255, 35, 143, 0.15)"
                           }}
                         >
                           {c.code}

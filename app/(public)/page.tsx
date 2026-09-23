@@ -134,7 +134,7 @@ export default function IlleniumWallHome() {
         <button type="button" onClick={() => setOpen("legacy")}>Legacy</button>
         <button type="button" onClick={() => setOpen("info")}>Info</button>
         <button type="button" className="go" onClick={() => setOpen("register")}>Register</button>
-        <Link href="/auth/login" style={{ color: "var(--mag)", fontWeight: 700 }}>Portal</Link>
+        <Link href="/auth/login" style={{ color: "#ff238f", fontWeight: 700 }}>Portal</Link>
       </div>
 
       {/* HUD bottom */}
@@ -263,7 +263,7 @@ export default function IlleniumWallHome() {
           <Link href="/register?mode=leader" className="L3">Register your contingent</Link><br />
           <Link href="/register?mode=join" className="L2">Join a contingency (7-Step Wizard)</Link><br />
           <Link href="/register?mode=on-the-spot" className="L1">Enter as an independent</Link><br />
-          <Link href="/register?mode=status" className="L2" style={{ color: "var(--acid)" }}>Track Approval & Review Status</Link>
+          <Link href="/register?mode=status" className="L2" style={{ color: "#ff238f" }}>Track Approval & Review Status</Link>
         </div>
         <p className="mcap" style={{ marginTop: 26 }}>Official registration open for invited colleges across India.</p>
       </section>

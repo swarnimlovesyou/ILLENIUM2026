@@ -8,7 +8,7 @@ interface MetricCardProps {
   value: React.ReactNode;
   subtext?: string;
   icon?: LucideIcon;
-  color?: string; // e.g. "var(--acid)", "var(--success)", "var(--warning)", "var(--mag)", "var(--cyan)", "var(--gold)"
+  color?: string; // e.g. "#ff238f", "var(--success)", "var(--warning)", "#ff238f", "#ff238f", "var(--gold)"
 }
 
 export function MetricCard({
@@ -16,7 +16,7 @@ export function MetricCard({
   value,
   subtext,
   icon: Icon,
-  color = "var(--acid)"
+  color = "#ff238f"
 }: MetricCardProps) {
   return (
     <div className="kpi-card">
@@ -24,7 +24,7 @@ export function MetricCard({
         {Icon && <Icon size={14} style={{ color }} />}
         <span>{label}</span>
       </div>
-      <div className="kpi-value" style={{ color: color === "var(--acid)" ? "var(--bone)" : color }}>
+      <div className="kpi-value" style={{ color: color === "#ff238f" ? "var(--bone)" : color }}>
         {value}
       </div>
       {subtext && <div className="kpi-subtext">{subtext}</div>}

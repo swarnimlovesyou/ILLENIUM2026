@@ -286,7 +286,7 @@ export default function LeaderboardPage() {
                         <span style={{ fontWeight: 700, color: "var(--bone)", fontSize: "0.95rem" }}>
                           {entry.contingentName}
                         </span>
-                        <span className="mono" style={{ fontSize: "0.75rem", color: "var(--acid)" }}>
+                        <span className="mono" style={{ fontSize: "0.75rem", color: "#ff238f" }}>
                           CODE: {entry.contingentCode}
                         </span>
                       </div>
@@ -307,9 +307,9 @@ export default function LeaderboardPage() {
                           fontWeight: 700,
                           color:
                             entry.totalBiddingPoints > 0
-                              ? "var(--acid)"
+                              ? "#ff238f"
                               : entry.totalBiddingPoints < 0
-                              ? "var(--mag)"
+                              ? "#ff238f"
                               : "var(--bone-dim)"
                         }}
                       >
@@ -322,9 +322,9 @@ export default function LeaderboardPage() {
                           fontWeight: 700,
                           color:
                             entry.totalAdjustments < 0
-                              ? "var(--mag)"
+                              ? "#ff238f"
                               : entry.totalAdjustments > 0
-                              ? "var(--acid)"
+                              ? "#ff238f"
                               : "var(--bone-dim)"
                         }}
                       >

@@ -147,7 +147,7 @@ export default function VerificationPage() {
             value={profiles.length}
             subtext="Registered attendee profiles"
             icon={Layers}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Verified Passes"
@@ -168,14 +168,14 @@ export default function VerificationPage() {
             value={activeWristbands.length}
             subtext="Active RFID tokens in circulation"
             icon={QrCode}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Wristbands Replaced"
             value={replacedWristbands.length}
             subtext="Damaged or lost re-issuances"
             icon={RotateCcw}
-            color="var(--mag)"
+            color="#ff238f"
           />
         </MetricGrid>
 
@@ -300,15 +300,15 @@ export default function VerificationPage() {
                                 fontSize: "0.7rem",
                                 padding: "0.2rem 0.45rem",
                                 borderRadius: "4px",
-                                background: "rgba(0, 229, 255, 0.1)",
-                                color: "var(--cyan)",
-                                border: "1px solid rgba(0, 229, 255, 0.3)"
+                                background: "rgba(255, 35, 143, 0.15)",
+                                color: "#ff238f",
+                                border: "1px solid rgba(255, 35, 143, 0.15)"
                               }}
                             >
                               Day {activeWb.day} Active
                             </span>
                             {hasReplaced && (
-                              <div style={{ fontSize: "0.65rem", color: "var(--mag)", marginTop: "0.2rem" }}>
+                              <div style={{ fontSize: "0.65rem", color: "#ff238f", marginTop: "0.2rem" }}>
                                 History: Replaced
                               </div>
                             )}
@@ -330,7 +330,7 @@ export default function VerificationPage() {
                               </button>
                               <button
                                 className="btn btn-secondary btn-sm"
-                                style={{ color: "var(--mag)" }}
+                                style={{ color: "#ff238f" }}
                                 onClick={() => reject(row.id)}
                               >
                                 Reject
@@ -342,7 +342,7 @@ export default function VerificationPage() {
                               style={{ gap: "0.35rem" }}
                               onClick={() => setSelectedProfileForWristband(row)}
                             >
-                              <Ticket size={13} style={{ color: "var(--acid)" }} />
+                              <Ticket size={13} style={{ color: "#ff238f" }} />
                               <span>{activeWb ? "Replace Wristband" : "Issue Wristband"}</span>
                             </button>
                           )}
@@ -407,7 +407,7 @@ export default function VerificationPage() {
             >
               <div className="card-header">
                 <h3 className="card-title">
-                  <Ticket size={16} style={{ color: "var(--acid)" }} />
+                  <Ticket size={16} style={{ color: "#ff238f" }} />
                   Accredit RFID Wristband
                 </h3>
                 <button
@@ -424,7 +424,7 @@ export default function VerificationPage() {
                 <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--bone)", marginTop: "0.2rem" }}>
                   {selectedProfileForWristband.fullName}
                 </div>
-                <div className="mono" style={{ fontSize: "0.8rem", color: "var(--acid)" }}>
+                <div className="mono" style={{ fontSize: "0.8rem", color: "#ff238f" }}>
                   Permanent UID: {selectedProfileForWristband.illeniumId}
                 </div>
               </div>
@@ -446,14 +446,14 @@ export default function VerificationPage() {
                   style={{
                     padding: "0.75rem 1rem",
                     borderRadius: "var(--radius-sm)",
-                    background: "rgba(216, 255, 46, 0.08)",
-                    border: "1px solid rgba(216, 255, 46, 0.2)",
+                    background: "rgba(255, 35, 143, 0.15)",
+                    border: "1px solid rgba(255, 35, 143, 0.15)",
                     fontSize: "0.75rem",
                     color: "var(--bone-dim)",
                     lineHeight: 1.5
                   }}
                 >
-                  <b style={{ color: "var(--acid)" }}>Security Policy:</b> Binding a new wristband token for this day will
+                  <b style={{ color: "#ff238f" }}>Security Policy:</b> Binding a new wristband token for this day will
                   automatically mark any existing wristband as <i>Replaced</i> in the compliance audit log.
                 </div>
 

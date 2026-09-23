@@ -84,7 +84,7 @@ export default function AuditTrailPage() {
             value={logs.length}
             subtext="Captured system operations"
             icon={ClipboardList}
-            color="var(--acid)"
+            color="#ff238f"
           />
           <MetricCard
             label="Integrity Status"
@@ -98,7 +98,7 @@ export default function AuditTrailPage() {
             value={uniqueActors || 1}
             subtext="CP, OC, Desk & Judges"
             icon={Users}
-            color="var(--cyan)"
+            color="#ff238f"
           />
           <MetricCard
             label="Tamper Detection"
@@ -181,9 +181,9 @@ export default function AuditTrailPage() {
                           fontSize: "0.7rem",
                           padding: "0.2rem 0.5rem",
                           borderRadius: "var(--radius-sm)",
-                          background: "rgba(216, 255, 46, 0.08)",
-                          color: "var(--acid)",
-                          border: "1px solid rgba(216, 255, 46, 0.25)"
+                          background: "rgba(255, 35, 143, 0.15)",
+                          color: "#ff238f",
+                          border: "1px solid rgba(255, 35, 143, 0.15)"
                         }}
                       >
                         {l.action}
@@ -276,7 +276,7 @@ export default function AuditTrailPage() {
             >
               <div className="card-header">
                 <h3 className="card-title">
-                  <Terminal size={16} style={{ color: "var(--acid)" }} />
+                  <Terminal size={16} style={{ color: "#ff238f" }} />
                   Audit Transaction Inspector
                 </h3>
                 <button
@@ -302,7 +302,7 @@ export default function AuditTrailPage() {
                 >
                   <div>
                     <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Transaction ID</div>
-                    <div className="mono" style={{ fontSize: "0.85rem", color: "var(--acid)" }}>
+                    <div className="mono" style={{ fontSize: "0.85rem", color: "#ff238f" }}>
                       {selectedLog.id}
                     </div>
                   </div>
@@ -323,7 +323,7 @@ export default function AuditTrailPage() {
 
                   <div>
                     <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Action Token</div>
-                    <div className="mono" style={{ fontSize: "0.85rem", color: "var(--cyan)" }}>
+                    <div className="mono" style={{ fontSize: "0.85rem", color: "#ff238f" }}>
                       {selectedLog.action}
                     </div>
                   </div>
@@ -360,7 +360,7 @@ export default function AuditTrailPage() {
                       borderRadius: "var(--radius-sm)",
                       border: "1px solid var(--line)",
                       fontSize: "0.75rem",
-                      color: "var(--acid)",
+                      color: "#ff238f",
                       overflowX: "auto"
                     }}
                   >

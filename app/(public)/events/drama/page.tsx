@@ -92,7 +92,7 @@ export default function DramaEventPage() {
           <span style={{ color: "var(--dim)", fontSize: "0.85rem" }}>/</span>
           <span style={{ fontSize: "0.85rem", color: "var(--bone-dim)" }}>Programme</span>
           <span style={{ color: "var(--dim)", fontSize: "0.85rem" }}>/</span>
-          <span style={{ fontSize: "0.85rem", color: "var(--acid)", fontWeight: 600 }}>D.R.A.M.A (Street Play)</span>
+          <span style={{ fontSize: "0.85rem", color: "#ff238f", fontWeight: 600 }}>D.R.A.M.A (Street Play)</span>
         </div>
 
         {/* 1. HERO SECTION */}
@@ -117,7 +117,7 @@ export default function DramaEventPage() {
               width: "450px",
               height: "450px",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(216, 255, 46, 0.08) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(255, 35, 143, 0.15) 0%, transparent 70%)",
               pointerEvents: "none"
             }}
           />
@@ -132,11 +132,11 @@ export default function DramaEventPage() {
                   gap: "0.4rem",
                   padding: "0.25rem 0.75rem",
                   borderRadius: "999px",
-                  background: "rgba(216, 255, 46, 0.12)",
-                  border: "1px solid rgba(216, 255, 46, 0.35)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
                   fontSize: "0.75rem",
                   fontWeight: 700,
-                  color: "var(--acid)",
+                  color: "#ff238f",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase"
                 }}
@@ -152,11 +152,11 @@ export default function DramaEventPage() {
                   gap: "0.4rem",
                   padding: "0.25rem 0.65rem",
                   borderRadius: "999px",
-                  background: "rgba(255, 45, 111, 0.1)",
-                  border: "1px solid rgba(255, 45, 111, 0.3)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
                   fontSize: "0.75rem",
                   fontWeight: 600,
-                  color: "var(--mag)",
+                  color: "#ff238f",
                   letterSpacing: "0.04em",
                   textTransform: "uppercase"
                 }}
@@ -228,7 +228,7 @@ export default function DramaEventPage() {
                 className="btn btn-secondary btn-lg"
                 style={{ gap: "0.6rem" }}
               >
-                <Flame size={18} style={{ color: "var(--mag)" }} />
+                <Flame size={18} style={{ color: "#ff238f" }} />
                 <span>Contingent Bidding (+15 / -8)</span>
               </Link>
             </div>
@@ -246,7 +246,7 @@ export default function DramaEventPage() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <Calendar size={18} style={{ color: "var(--acid)" }} />
+              <Calendar size={18} style={{ color: "#ff238f" }} />
               <div>
                 <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Date</div>
                 <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>Saturday, 28 Nov 2026</div>
@@ -254,7 +254,7 @@ export default function DramaEventPage() {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <Clock size={18} style={{ color: "var(--cyan)" }} />
+              <Clock size={18} style={{ color: "#ff238f" }} />
               <div>
                 <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Time</div>
                 <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>16:30 IST (Report 16:00)</div>
@@ -262,7 +262,7 @@ export default function DramaEventPage() {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <MapPin size={18} style={{ color: "var(--mag)" }} />
+              <MapPin size={18} style={{ color: "#ff238f" }} />
               <div>
                 <div style={{ fontSize: "0.7rem", color: "var(--dim)", textTransform: "uppercase" }}>Venue</div>
                 <div style={{ fontSize: "0.9rem", fontWeight: 600 }}>Quad Stage (Open Air)</div>
@@ -282,7 +282,7 @@ export default function DramaEventPage() {
         {/* 2. ABOUT THE DRAMA COMPETITION */}
         <section style={{ marginBottom: "3.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-            <span style={{ color: "var(--acid)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <span style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
               01 · Overview
             </span>
           </div>
@@ -296,7 +296,7 @@ export default function DramaEventPage() {
           >
             <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <h3 style={{ fontSize: "1.2rem", color: "var(--bone)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Sparkles size={18} style={{ color: "var(--acid)" }} />
+                <Sparkles size={18} style={{ color: "#ff238f" }} />
                 Pure Campus Street Theatre
               </h3>
               <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.7, color: "var(--bone-dim)" }}>
@@ -323,7 +323,7 @@ export default function DramaEventPage() {
         {/* 3. EVENT SPECIFICATION GRID */}
         <section style={{ marginBottom: "3.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-            <span style={{ color: "var(--acid)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <span style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
               02 · Specifications
             </span>
           </div>
@@ -340,7 +340,7 @@ export default function DramaEventPage() {
               <div style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "var(--dim)", marginBottom: "0.3rem" }}>
                 Event Identifier
               </div>
-              <div className="mono" style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--acid)" }}>
+              <div className="mono" style={{ fontSize: "1.25rem", fontWeight: 700, color: "#ff238f" }}>
                 E-105 · D.R.A.M.A
               </div>
               <div style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
@@ -400,7 +400,7 @@ export default function DramaEventPage() {
               <div style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "var(--dim)", marginBottom: "0.3rem" }}>
                 Bidding &amp; Stakes
               </div>
-              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--mag)" }}>
+              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "#ff238f" }}>
                 +15 Win / -8 Penalty
               </div>
               <div style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
@@ -413,7 +413,7 @@ export default function DramaEventPage() {
         {/* 4. RULES & FORMAT SECTION */}
         <section style={{ marginBottom: "3.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-            <span style={{ color: "var(--acid)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <span style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
               03 · Rules &amp; Guidelines
             </span>
           </div>
@@ -435,9 +435,9 @@ export default function DramaEventPage() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "var(--radius-sm)",
-                  background: "rgba(216, 255, 46, 0.1)",
-                  border: "1px solid rgba(216, 255, 46, 0.3)",
-                  color: "var(--acid)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
+                  color: "#ff238f",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -473,9 +473,9 @@ export default function DramaEventPage() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "var(--radius-sm)",
-                  background: "rgba(0, 229, 255, 0.1)",
-                  border: "1px solid rgba(0, 229, 255, 0.3)",
-                  color: "var(--cyan)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
+                  color: "#ff238f",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -511,9 +511,9 @@ export default function DramaEventPage() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "var(--radius-sm)",
-                  background: "rgba(255, 45, 111, 0.1)",
-                  border: "1px solid rgba(255, 45, 111, 0.3)",
-                  color: "var(--mag)",
+                  background: "rgba(255, 35, 143, 0.15)",
+                  border: "1px solid rgba(255, 35, 143, 0.15)",
+                  color: "#ff238f",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -580,7 +580,7 @@ export default function DramaEventPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "1.25rem" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem" }}>
-                <span style={{ color: "var(--acid)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span style={{ color: "#ff238f", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   04 · Archive
                 </span>
               </div>
@@ -684,7 +684,7 @@ export default function DramaEventPage() {
               transform: "translateX(-50%)",
               width: "400px",
               height: "2px",
-              background: "linear-gradient(90deg, transparent, var(--acid), transparent)"
+              background: "linear-gradient(90deg, transparent, #ff238f, transparent)"
             }}
           />
           <h2 style={{ fontSize: "2.25rem", marginBottom: "0.75rem" }}>Claim Your Contingent Slot</h2>
@@ -744,7 +744,7 @@ export default function DramaEventPage() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span className="mono" style={{ color: "var(--acid)", fontSize: "0.85rem", fontWeight: 700 }}>
+                <span className="mono" style={{ color: "#ff238f", fontSize: "0.85rem", fontWeight: 700 }}>
                   Archive Photo #{String(activePhotoIndex + 1).padStart(2, "0")} / {String(DRAMA_PHOTOS.length).padStart(2, "0")}
                 </span>
               </div>

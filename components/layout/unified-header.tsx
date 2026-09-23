@@ -193,12 +193,12 @@ export function UnifiedHeader() {
                   width: "28px",
                   height: "28px",
                   borderRadius: "6px",
-                  background: "var(--acid)",
-                  color: "var(--ink)",
+                  background: "#ff238f",
+                  color: "#ffffff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontWeight: 800,
+                  fontWeight: 900,
                   fontSize: "14px",
                   fontFamily: "var(--font-display)"
                 }}
@@ -214,7 +214,7 @@ export function UnifiedHeader() {
                   color: "var(--bone)"
                 }}
               >
-                ILLENIUM <span style={{ color: "var(--acid)" }}>2026</span>
+                ILLENIUM <span style={{ color: "#ff238f" }}>2026</span>
               </span>
             </Link>
 
@@ -225,11 +225,11 @@ export function UnifiedHeader() {
                 gap: "0.4rem",
                 padding: "0.2rem 0.6rem",
                 borderRadius: "999px",
-                background: "rgba(216, 255, 46, 0.08)",
-                border: "1px solid rgba(216, 255, 46, 0.2)",
+                background: "rgba(255, 35, 143, 0.12)",
+                border: "1px solid rgba(255, 35, 143, 0.3)",
                 fontSize: "0.7rem",
-                fontWeight: 600,
-                color: "var(--acid)",
+                fontWeight: 700,
+                color: "#ff238f",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase"
               }}
@@ -239,8 +239,8 @@ export function UnifiedHeader() {
                   width: "6px",
                   height: "6px",
                   borderRadius: "50%",
-                  background: "var(--acid)",
-                  boxShadow: "0 0 8px var(--acid)"
+                  background: "#ff238f",
+                  boxShadow: "0 0 8px #ff238f"
                 }}
                 className="animate-pulse-glow"
               />
@@ -268,7 +268,7 @@ export function UnifiedHeader() {
               className={`btn btn-sm ${pathname === "/leaderboard" ? "btn-secondary" : "btn-ghost"}`}
               style={{ fontWeight: 500, display: "flex", alignItems: "center", gap: "0.4rem" }}
             >
-              <Trophy size={14} style={{ color: "var(--gold)" }} />
+              <Trophy size={14} style={{ color: "#ffc837" }} />
               Leaderboard
             </Link>
             <Link
@@ -283,7 +283,7 @@ export function UnifiedHeader() {
               className={`btn btn-sm ${pathname.startsWith("/oc/scanner") ? "btn-secondary" : "btn-ghost"}`}
               style={{ fontWeight: 500, display: "flex", alignItems: "center", gap: "0.4rem" }}
             >
-              <QrCode size={14} style={{ color: "var(--cyan)" }} />
+              <QrCode size={14} style={{ color: "#ff238f" }} />
               Scanner
             </Link>
           </nav>
@@ -299,11 +299,11 @@ export function UnifiedHeader() {
                 gap: "0.5rem",
                 padding: "0.45rem 0.85rem",
                 borderRadius: "var(--radius-sm)",
-                borderColor: "rgba(216, 255, 46, 0.25)",
+                borderColor: "rgba(255, 35, 143, 0.3)",
                 background: "rgba(24, 22, 34, 0.9)"
               }}
             >
-              <Layers size={14} style={{ color: "var(--acid)" }} />
+              <Layers size={14} style={{ color: "#ff238f" }} />
               <span style={{ fontWeight: 600 }}>Portals & Roles</span>
               <kbd
                 style={{
@@ -363,7 +363,7 @@ export function UnifiedHeader() {
                 background: "var(--bg-surface)"
               }}
             >
-              <Search size={18} style={{ color: "var(--acid)" }} />
+              <Search size={18} style={{ color: "#ff238f" }} />
               <input
                 type="text"
                 autoFocus
@@ -415,9 +415,9 @@ export function UnifiedHeader() {
                       gap: "0.35rem",
                       padding: "1rem",
                       borderRadius: "var(--radius-md)",
-                      background: isCurrent ? "rgba(216, 255, 46, 0.06)" : "var(--bg-card)",
+                      background: isCurrent ? "rgba(255, 35, 143, 0.15)" : "var(--bg-card)",
                       border: isCurrent
-                        ? "1px solid rgba(216, 255, 46, 0.4)"
+                        ? "1px solid rgba(255, 35, 143, 0.15)"
                         : "1px solid var(--line)",
                       textDecoration: "none",
                       transition: "all 0.15s ease"
@@ -428,10 +428,10 @@ export function UnifiedHeader() {
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = isCurrent
-                        ? "rgba(216, 255, 46, 0.4)"
+                        ? "rgba(255, 35, 143, 0.15)"
                         : "var(--line)";
                       e.currentTarget.style.background = isCurrent
-                        ? "rgba(216, 255, 46, 0.06)"
+                        ? "rgba(255, 35, 143, 0.15)"
                         : "var(--bg-card)";
                     }}
                   >
@@ -448,7 +448,7 @@ export function UnifiedHeader() {
                             padding: "0.4rem",
                             borderRadius: "6px",
                             background: "rgba(255, 255, 255, 0.05)",
-                            color: portal.accent === "acid" ? "var(--acid)" : portal.accent === "crimson" ? "var(--mag)" : portal.accent === "gold" ? "var(--gold)" : "var(--cyan)"
+                            color: portal.accent === "acid" ? "#ff238f" : portal.accent === "crimson" ? "#ff238f" : portal.accent === "gold" ? "var(--gold)" : "#ff238f"
                           }}
                         >
                           <IconComponent size={16} />

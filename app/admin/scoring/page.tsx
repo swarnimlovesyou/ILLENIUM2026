@@ -122,11 +122,11 @@ export default function MasterScoringPage() {
                 gap: "0.4rem",
                 padding: "0.2rem 0.6rem",
                 borderRadius: "999px",
-                background: "rgba(216, 255, 46, 0.1)",
-                border: "1px solid rgba(216, 255, 46, 0.3)",
+                background: "rgba(255, 35, 143, 0.15)",
+                border: "1px solid rgba(255, 35, 143, 0.15)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
-                color: "var(--acid)",
+                color: "#ff238f",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
                 marginBottom: "0.5rem"
@@ -154,7 +154,7 @@ export default function MasterScoringPage() {
         <div className="kpi-grid">
           <div className="kpi-card">
             <div className="kpi-label">
-              <Sparkles size={14} style={{ color: "var(--acid)" }} />
+              <Sparkles size={14} style={{ color: "#ff238f" }} />
               Active Events
             </div>
             <div className="kpi-value">{events.length}</div>
@@ -162,10 +162,10 @@ export default function MasterScoringPage() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <Gavel size={14} style={{ color: "var(--cyan)" }} />
+              <Gavel size={14} style={{ color: "#ff238f" }} />
               Raw Judge Marks
             </div>
-            <div className="kpi-value" style={{ color: "var(--acid)" }}>
+            <div className="kpi-value" style={{ color: "#ff238f" }}>
               {scores.length}
             </div>
             <div className="kpi-subtext">Vertical submissions</div>
@@ -180,10 +180,10 @@ export default function MasterScoringPage() {
           </div>
           <div className="kpi-card">
             <div className="kpi-label">
-              <AlertTriangle size={14} style={{ color: "var(--mag)" }} />
+              <AlertTriangle size={14} style={{ color: "#ff238f" }} />
               OC Adjustments
             </div>
-            <div className="kpi-value" style={{ color: "var(--mag)" }}>
+            <div className="kpi-value" style={{ color: "#ff238f" }}>
               {adjustments.length}
             </div>
             <div className="kpi-subtext">Penalties & bonuses</div>
@@ -235,9 +235,9 @@ export default function MasterScoringPage() {
             style={{
               padding: "0.85rem 1.25rem",
               borderRadius: "var(--radius-sm)",
-              background: "rgba(216, 255, 46, 0.1)",
-              border: "1px solid rgba(216, 255, 46, 0.3)",
-              color: "var(--acid)",
+              background: "rgba(255, 35, 143, 0.15)",
+              border: "1px solid rgba(255, 35, 143, 0.15)",
+              color: "#ff238f",
               fontSize: "0.875rem",
               display: "flex",
               alignItems: "center",
@@ -312,7 +312,7 @@ export default function MasterScoringPage() {
                       </td>
                       <td>{s.criterionId}</td>
                       <td style={{ textAlign: "right" }}>
-                        <span className="mono" style={{ fontWeight: 700, color: "var(--acid)" }}>
+                        <span className="mono" style={{ fontWeight: 700, color: "#ff238f" }}>
                           {s.rawScore}
                         </span>
                         <span style={{ color: "var(--dim)", fontSize: "0.75rem" }}> / {s.maxScore}</span>
@@ -408,9 +408,9 @@ export default function MasterScoringPage() {
                               fontWeight: 700,
                               color:
                                 b.pointsAwarded > 0
-                                  ? "var(--acid)"
+                                  ? "#ff238f"
                                   : b.pointsAwarded < 0
-                                  ? "var(--mag)"
+                                  ? "#ff238f"
                                   : "var(--bone-dim)"
                             }}
                           >
@@ -431,7 +431,7 @@ export default function MasterScoringPage() {
           <div className="card-header">
             <div>
               <h3 className="card-title">
-                <AlertTriangle size={18} style={{ color: "var(--mag)" }} />
+                <AlertTriangle size={18} style={{ color: "#ff238f" }} />
                 Record Disciplinary Penalty / Administrative Adjustment
               </h3>
               <p style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.2rem" }}>
@@ -546,7 +546,7 @@ export default function MasterScoringPage() {
                             className="mono"
                             style={{
                               fontWeight: 700,
-                              color: a.pointsDelta < 0 ? "var(--mag)" : "var(--acid)"
+                              color: a.pointsDelta < 0 ? "#ff238f" : "#ff238f"
                             }}
                           >
                             {a.pointsDelta > 0 ? `+${a.pointsDelta}` : a.pointsDelta} pts
