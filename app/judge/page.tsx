@@ -3,7 +3,16 @@
 import { useEffect, useState } from "react";
 import { RoleShell } from "@/components/layout/role-shell";
 import { masterStore, EventRecord, ScoringCriterion, Contingent } from "@/services/master-store";
-import Link from "next/link";
+import {
+  Gavel,
+  Lock,
+  Save,
+  CheckCircle2,
+  SlidersHorizontal,
+  Info,
+  Sparkles,
+  ShieldCheck
+} from "lucide-react";
 
 export default function JudgePortalPage() {
   const [events, setEvents] = useState<EventRecord[]>([]);
@@ -11,7 +20,7 @@ export default function JudgePortalPage() {
   const [criteria, setCriteria] = useState<ScoringCriterion[]>([]);
   const [contingents, setContingents] = useState<Contingent[]>([]);
   const [selectedContingentId, setSelectedContingentId] = useState("");
-  
+
   // Marks keyed by criterionId: 0-100
   const [marks, setMarks] = useState<Record<string, number>>({});
   const [submittedMessage, setSubmittedMessage] = useState("");
@@ -29,12 +38,11 @@ export default function JudgePortalPage() {
 
   function loadCriteria(eventId: string) {
     const crit = masterStore.getCriteriaByEvent(eventId);
-    // If no criteria seeded for this specific event, provide fallback standard fest criteria
     if (!crit.length) {
       const fallback: ScoringCriterion[] = [
-        { id: `crit-${eventId}-1`, eventId, name: "Execution & Technique", maxScore: 100, weight: 1.0, description: "Mastery and precision" },
-        { id: `crit-${eventId}-2`, eventId, name: "Creativity & Originality", maxScore: 100, weight: 1.0, description: "Innovation and flair" },
-        { id: `crit-${eventId}-3`, eventId, name: "Overall Stage Presence", maxScore: 100, weight: 1.0, description: "Crowd impact and delivery" }
+        { id: `crit-${eventId}-1`, eventId, name: "Execution & Technique", maxScore: 100, weight: 1.0, description: "Technical precision, mastery, and error-free execution." },
+        { id: `crit-${eventId}-2`, eventId, name: "Creativity & Originality", maxScore: 100, weight: 1.0, description: "Innovation, flair, unique conceptualization." },
+        { id: `crit-${eventId}-3`, eventId, name: "Stage Presence & Impact", maxScore: 100, weight: 1.0, description: "Audience connection, poise, overall delivery." }
       ];
       setCriteria(fallback);
     } else {
@@ -51,7 +59,7 @@ export default function JudgePortalPage() {
 
   function handleScoreChange(criterionId: string, val: number) {
     const clamped = Math.max(0, Math.min(100, val || 0));
-    setMarks(prev => ({ ...prev, [criterionId]: clamped }));
+    setMarks((prev) => ({ ...prev, [criterionId]: clamped }));
   }
 
   function handleSubmit(status: "draft" | "submitted") {
@@ -60,10 +68,10 @@ export default function JudgePortalPage() {
       return;
     }
 
-    const currentEvent = events.find(e => e.id === selectedEventId);
-    const currentContingent = contingents.find(c => c.id === selectedContingentId);
+    const currentEvent = events.find((e) => e.id === selectedEventId);
+    const currentContingent = contingents.find((c) => c.id === selectedContingentId);
 
-    criteria.forEach(c => {
+    criteria.forEach((c) => {
       const raw = marks[c.id] || 0;
       masterStore.submitJudgeScore({
         eventId: selectedEventId,
@@ -80,180 +88,315 @@ export default function JudgePortalPage() {
     });
 
     setSubmittedMessage(
-      status === "submitted" 
-        ? `Official score submitted and locked for ${currentContingent?.name} in ${currentEvent?.name}!`
+      status === "submitted"
+        ? `Official score submitted and sealed for ${currentContingent?.name} in ${currentEvent?.name}.`
         : `Draft score saved successfully for ${currentContingent?.name}.`
     );
     setIsDraft(status === "draft");
   }
 
-  const selectedEvent = events.find(e => e.id === selectedEventId);
-  const selectedContingent = contingents.find(c => c.id === selectedContingentId);
+  const selectedEvent = events.find((e) => e.id === selectedEventId);
+  const selectedContingent = contingents.find((c) => c.id === selectedContingentId);
 
   // Compute live total score
-  const totalWeighted = criteria.reduce((sum, c) => sum + ((marks[c.id] || 0) * c.weight), 0);
-  const maxPossible = criteria.reduce((sum, c) => sum + (c.maxScore * c.weight), 0);
+  const totalWeighted = criteria.reduce((sum, c) => sum + (marks[c.id] || 0) * c.weight, 0);
+  const maxPossible = criteria.reduce((sum, c) => sum + c.maxScore * c.weight, 0);
   const percentage = maxPossible > 0 ? ((totalWeighted / maxPossible) * 100).toFixed(1) : "0.0";
 
   return (
     <RoleShell role="judge">
-      <div className="workspace-page-head">
-        <div>
-          <div className="workspace-kicker">Section 9 · Authenticated Scoring</div>
-          <h1>Judge Scoring Portal</h1>
-          <p className="workspace-subtitle">
-            Authenticated judge terminal: Evaluate contestants on /100 verticals. Submissions are timestamped, weighted, and sealed.
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: "8px" }}>
-          <span className="live-pill"><i /> Judge: Vikramaditya Sen (ILL-26-J001)</span>
-        </div>
-      </div>
-
-      {submittedMessage && (
-        <div style={{ 
-          padding: "16px 20px", 
-          marginBottom: "20px", 
-          borderRadius: "2px", 
-          background: isDraft ? "rgba(255,159,28,.1)" : "rgba(216,255,46,.12)", 
-          border: `1px solid ${isDraft ? "#ff9f1c" : "var(--acid)"}`, 
-          color: isDraft ? "#ff9f1c" : "var(--acid)", 
-          fontSize: "14px" 
-        }}>
-          <b>✓ {submittedMessage}</b>
-          <div style={{ marginTop: "6px", fontSize: "12px", opacity: 0.8 }}>
-            Timestamp: {new Date().toLocaleTimeString()} · Record ID: authenticated judge seal
-          </div>
-        </div>
-      )}
-
-      {/* Event and Contestant Selection */}
-      <div className="workspace-panel" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
-        <div>
-          <label className="workspace-label">Assigned Event</label>
-          <select 
-            className="workspace-select" 
-            value={selectedEventId} 
-            onChange={e => handleEventChange(e.target.value)}
-          >
-            {events.map(ev => (
-              <option key={ev.id} value={ev.id}>
-                {ev.code} · {ev.name} ({ev.venue})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="workspace-label">Participant / Contingent Being Scored</label>
-          <select 
-            className="workspace-select" 
-            value={selectedContingentId} 
-            onChange={e => setSelectedContingentId(e.target.value)}
-          >
-            <option value="">-- Choose Contestant Entry --</option>
-            {contingents.map(c => (
-              <option key={c.id} value={c.id}>
-                {c.code} · {c.name} ({c.collegeName})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="workspace-label">Event Format &amp; Rule</label>
-          <div style={{ padding: "10px 14px", background: "rgba(244,241,233,.04)", border: "1px solid rgba(244,241,233,.1)", borderRadius: "2px", fontSize: "13px" }}>
-            <b>{selectedEvent?.eventType.toUpperCase()}</b> · Range: <b>0 to 100</b> per vertical
-          </div>
-        </div>
-      </div>
-
-      {/* Criteria Scoring Form */}
-      <div className="workspace-panel">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        {/* Header Bar */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <h2>Scoring Verticals · {selectedContingent ? selectedContingent.name : "Select Contestant"}</h2>
-            <p>Score each criterion independently on a scale of 0 to 100.</p>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <span style={{ fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--dim)" }}>Live Weighted Score</span>
-            <div style={{ fontFamily: "Anton", fontSize: "36px", color: "var(--acid)" }}>
-              {percentage}%
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                padding: "0.2rem 0.6rem",
+                borderRadius: "999px",
+                background: "rgba(255, 45, 111, 0.1)",
+                border: "1px solid rgba(255, 45, 111, 0.3)",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "var(--mag)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                marginBottom: "0.5rem"
+              }}
+            >
+              <Gavel size={13} />
+              Authenticated Evaluation Desk
             </div>
-            <span style={{ fontSize: "11px", color: "var(--dim)" }}>{totalWeighted} / {maxPossible} weighted pts</span>
+            <h1 style={{ fontSize: "2rem", fontWeight: 700 }}>Judge Scoring Terminal</h1>
+            <p style={{ marginTop: "0.25rem", fontSize: "0.9rem" }}>
+              Evaluate contestants across official verticals (/100). All submissions are cryptographically timestamped and sealed.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.5rem 0.85rem",
+              borderRadius: "var(--radius-sm)",
+              background: "var(--bg-surface-elevated)",
+              border: "1px solid var(--line)"
+            }}
+          >
+            <ShieldCheck size={16} style={{ color: "var(--acid)" }} />
+            <span style={{ fontSize: "0.8rem", color: "var(--bone)", fontWeight: 600 }}>
+              Judge Vikramaditya Sen
+            </span>
+            <span className="mono" style={{ fontSize: "0.75rem", color: "var(--bone-dim)" }}>
+              (ILL-26-J001)
+            </span>
           </div>
         </div>
 
-        <div style={{ display: "grid", gap: "18px" }}>
-          {criteria.map((c, index) => {
-            const currentMark = marks[c.id] || 0;
-            return (
-              <div 
-                key={c.id} 
-                style={{ 
-                  background: "#191524", 
-                  border: "1px solid rgba(244,241,233,.1)", 
-                  padding: "18px 20px", 
-                  borderRadius: "2px",
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto auto",
+        {/* Status Notification */}
+        {submittedMessage && (
+          <div
+            style={{
+              padding: "1rem 1.25rem",
+              borderRadius: "var(--radius-md)",
+              background: isDraft ? "rgba(245, 158, 11, 0.1)" : "rgba(216, 255, 46, 0.1)",
+              border: isDraft ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(216, 255, 46, 0.3)",
+              color: isDraft ? "var(--warning)" : "var(--acid)",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem"
+            }}
+          >
+            <CheckCircle2 size={18} />
+            <div>
+              <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{submittedMessage}</div>
+              <div style={{ fontSize: "0.75rem", opacity: 0.8, marginTop: "0.15rem" }}>
+                Timestamp: {new Date().toLocaleTimeString()} · Status: {isDraft ? "Draft Saved" : "Official Score Sealed"}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Selection Configuration Card */}
+        <div className="card">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "1.25rem"
+            }}
+          >
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label">Assigned Event</label>
+              <select
+                className="form-control"
+                value={selectedEventId}
+                onChange={(e) => handleEventChange(e.target.value)}
+              >
+                {events.map((ev) => (
+                  <option key={ev.id} value={ev.id}>
+                    {ev.code} — {ev.name} ({ev.venue})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label">Contestant / Contingent</label>
+              <select
+                className="form-control"
+                value={selectedContingentId}
+                onChange={(e) => setSelectedContingentId(e.target.value)}
+              >
+                <option value="">-- Choose Contestant Entry --</option>
+                {contingents.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.code} — {c.name} ({c.collegeName})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label">Format & Rule Bounds</label>
+              <div
+                style={{
+                  padding: "0.75rem 1rem",
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.85rem",
+                  color: "var(--bone-dim)",
+                  display: "flex",
                   alignItems: "center",
-                  gap: "20px"
+                  justifyContent: "space-between"
                 }}
               >
-                <div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                    <span style={{ fontFamily: "Anton", color: "var(--acid)", fontSize: "18px" }}>#{index + 1}</span>
-                    <b style={{ fontSize: "16px", color: "var(--bone)" }}>{c.name}</b>
-                    <span className="tag" style={{ fontSize: "10px" }}>Weight: {c.weight}x</span>
-                  </div>
-                  <p style={{ marginTop: "4px", fontSize: "13px", color: "var(--dim)" }}>
-                    {c.description || "Official fest evaluation parameter."}
-                  </p>
-                </div>
-
-                <div style={{ minWidth: 160 }}>
-                  <input 
-                    type="range" 
-                    min={0} 
-                    max={100} 
-                    value={currentMark} 
-                    onChange={e => handleScoreChange(c.id, Number(e.target.value))} 
-                    style={{ width: "100%", accentColor: "var(--acid)" }}
-                  />
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <input 
-                    type="number" 
-                    min={0} 
-                    max={100} 
-                    value={currentMark} 
-                    onChange={e => handleScoreChange(c.id, Number(e.target.value))}
-                    className="workspace-input" 
-                    style={{ width: 80, textAlign: "center", fontSize: "18px", fontWeight: "bold", color: "var(--acid)" }}
-                  />
-                  <span style={{ color: "var(--dim)", fontSize: "14px" }}>/ 100</span>
-                </div>
+                <span>Format: <b style={{ color: "var(--bone)" }}>{selectedEvent?.eventType.toUpperCase() || "SOLO"}</b></span>
+                <span>Scale: <b style={{ color: "var(--acid)" }}>0 to 100</b></span>
               </div>
-            );
-          })}
+            </div>
+          </div>
         </div>
 
-        {/* Action Controls */}
-        <div style={{ display: "flex", gap: "12px", marginTop: "24px", justifyContent: "flex-end" }}>
-          <button 
-            className="button button-secondary" 
-            onClick={() => handleSubmit("draft")}
+        {/* Criteria Evaluation Form */}
+        <div className="card">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.5rem",
+              paddingBottom: "1rem",
+              borderBottom: "1px solid var(--line)",
+              flexWrap: "wrap",
+              gap: "1rem"
+            }}
           >
-            Save Draft
-          </button>
-          <button 
-            className="button button-primary" 
-            onClick={() => handleSubmit("submitted")}
+            <div>
+              <h3 style={{ fontSize: "1.2rem" }}>
+                Criteria Scoring — {selectedContingent ? selectedContingent.name : "Select Contestant"}
+              </h3>
+              <p style={{ fontSize: "0.85rem", marginTop: "0.2rem" }}>
+                Score each criterion independently. Sliders adjust score in real-time.
+              </p>
+            </div>
+
+            <div
+              style={{
+                textAlign: "right",
+                background: "var(--bg-surface)",
+                padding: "0.75rem 1.25rem",
+                borderRadius: "var(--radius-sm)",
+                border: "1px solid var(--line)"
+              }}
+            >
+              <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--bone-dim)" }}>
+                Calculated Weighted Score
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "2rem",
+                  fontWeight: 700,
+                  color: "var(--acid)",
+                  lineHeight: 1.1
+                }}
+              >
+                {percentage}%
+              </div>
+              <div className="mono" style={{ fontSize: "0.75rem", color: "var(--dim)" }}>
+                {totalWeighted} / {maxPossible} pts
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {criteria.map((c, index) => {
+              const currentMark = marks[c.id] || 0;
+              return (
+                <div
+                  key={c.id}
+                  style={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--line)",
+                    padding: "1.25rem 1.5rem",
+                    borderRadius: "var(--radius-sm)",
+                    display: "grid",
+                    gridTemplateColumns: "1.5fr 2fr 120px",
+                    alignItems: "center",
+                    gap: "1.5rem"
+                  }}
+                >
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span className="mono" style={{ color: "var(--acid)", fontWeight: 700 }}>
+                        #{String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span style={{ fontWeight: 600, color: "var(--bone)", fontSize: "0.95rem" }}>
+                        {c.name}
+                      </span>
+                      <span className="badge badge-neutral" style={{ fontSize: "0.65rem" }}>
+                        {c.weight}x Weight
+                      </span>
+                    </div>
+                    <p style={{ marginTop: "0.35rem", fontSize: "0.8rem", color: "var(--bone-dim)" }}>
+                      {c.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={currentMark}
+                      onChange={(e) => handleScoreChange(c.id, Number(e.target.value))}
+                      style={{
+                        width: "100%",
+                        accentColor: "var(--acid)",
+                        cursor: "pointer"
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "flex-end" }}>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={currentMark}
+                      onChange={(e) => handleScoreChange(c.id, Number(e.target.value))}
+                      className="form-control mono"
+                      style={{
+                        width: "70px",
+                        textAlign: "center",
+                        fontSize: "1.1rem",
+                        fontWeight: 700,
+                        color: "var(--acid)",
+                        padding: "0.4rem"
+                      }}
+                    />
+                    <span className="mono" style={{ color: "var(--dim)", fontSize: "0.8rem" }}>
+                      / 100
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Action Buttons */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "0.75rem",
+              marginTop: "2rem",
+              paddingTop: "1.25rem",
+              borderTop: "1px solid var(--line)"
+            }}
           >
-            🔒 Submit &amp; Seal Score
-          </button>
+            <button
+              onClick={() => handleSubmit("draft")}
+              className="btn btn-secondary"
+              style={{ gap: "0.5rem" }}
+            >
+              <Save size={15} />
+              <span>Save Draft</span>
+            </button>
+            <button
+              onClick={() => handleSubmit("submitted")}
+              className="btn btn-primary"
+              style={{ gap: "0.5rem" }}
+            >
+              <Lock size={15} />
+              <span>Submit & Seal Score</span>
+            </button>
+          </div>
         </div>
       </div>
     </RoleShell>

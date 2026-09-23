@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { UnifiedHeader } from "@/components/layout/unified-header";
 
 // Same photos used in the original Wall
 const PHOTOS = [
@@ -105,6 +106,7 @@ export default function IlleniumWallHome() {
 
   return (
     <>
+      <UnifiedHeader />
       {/* Stage */}
       <div id="stage" ref={stageRef}>
         <div id="wall" ref={wallRef} />

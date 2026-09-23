@@ -4,63 +4,80 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
+import {
+  LayoutDashboard,
+  Calendar,
+  Flame,
+  CreditCard,
+  Trophy,
+  QrCode,
+  CheckCircle2,
+  Gavel,
+  Users,
+  Shield,
+  ClipboardList,
+  ExternalLink,
+  LogOut,
+  Menu,
+  X,
+  Layers,
+  Sparkles,
+  Ticket
+} from "lucide-react";
+import { UnifiedHeader } from "./unified-header";
 
 type Role = "participant" | "oc" | "admin" | "judge";
 
 const configs = {
   participant: {
-    label: "Participant portal",
-    title: "Your ILLENIUM passport",
+    label: "Participant Desk",
+    title: "Passport & Predictions",
     nav: [
-      { href: "/participant/dashboard", label: "Overview", icon: "◈" },
-      { href: "/events", label: "Programme", icon: "✦" },
-      { href: "/participant/bidding", label: "Event Bidding", icon: "★" },
-      { href: "/participant/id", label: "Digital ID", icon: "⌁" },
-      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
-    ],
-    accent: "acid"
+      { href: "/participant/dashboard", label: "Overview", icon: LayoutDashboard },
+      { href: "/events", label: "Programme", icon: Calendar },
+      { href: "/participant/bidding", label: "Event Bidding", icon: Flame },
+      { href: "/participant/id", label: "Digital Pass", icon: CreditCard },
+      { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
+    ]
   },
   oc: {
-    label: "OC operations",
-    title: "Field operations",
+    label: "Field Operations",
+    title: "Gate & Check-in Control",
     nav: [
-      { href: "/oc/dashboard", label: "My shift", icon: "◈" },
-      { href: "/oc/scanner", label: "Scan pass", icon: "⌁" },
-      { href: "/oc/check-ins", label: "Check-ins", icon: "✓" },
-      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
-    ],
-    accent: "acid"
+      { href: "/oc/dashboard", label: "Shift Summary", icon: LayoutDashboard },
+      { href: "/oc/scanner", label: "Gate Scanner", icon: QrCode },
+      { href: "/oc/check-ins", label: "Check-in Logs", icon: CheckCircle2 },
+      { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
+    ]
   },
   judge: {
-    label: "Judge Portal",
+    label: "Judge Console",
     title: "Authenticated Scoring",
     nav: [
-      { href: "/judge", label: "Score Event", icon: "✦" },
-      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
-    ],
-    accent: "acid"
+      { href: "/judge", label: "Score Evaluation", icon: Gavel },
+      { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
+    ]
   },
   admin: {
-    label: "Festival control room",
-    title: "Operations console",
+    label: "Festival Command Center",
+    title: "Operations Console",
     nav: [
-      { href: "/admin/dashboard", label: "Overview", icon: "◈" },
-      { href: "/admin/contingents", label: "Contingents (CL/ACL)", icon: "🏛" },
-      { href: "/admin/verification", label: "Verification", icon: "✓" },
-      { href: "/admin/participants", label: "Participants", icon: "◎" },
-      { href: "/admin/events", label: "Events Master", icon: "✦" },
-      { href: "/admin/scoring", label: "Scoring & Bids", icon: "★" },
-      { href: "/admin/audit", label: "Audit Trail", icon: "📋" },
-      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
-    ],
-    accent: "acid"
+      { href: "/admin/dashboard", label: "Command Overview", icon: LayoutDashboard },
+      { href: "/admin/contingents", label: "Contingents (CL/ACL)", icon: Users },
+      { href: "/admin/verification", label: "Accreditation & Wristbands", icon: Ticket },
+      { href: "/admin/participants", label: "Participants", icon: Users },
+      { href: "/admin/events", label: "Events Master", icon: Sparkles },
+      { href: "/admin/scoring", label: "Scoring & Bids", icon: Shield },
+      { href: "/admin/audit", label: "Audit Trail", icon: ClipboardList },
+      { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
+    ]
   }
 } as const;
 
 export function RoleShell({ role, children }: { role: Role; children: React.ReactNode }) {
   const pathname = usePathname();
   const config = configs[role];
-  const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   async function signOut() {
     try {
@@ -72,71 +89,148 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
   }
 
   return (
-    <div className={`workspace-shell workspace-${role}`}>
-      {/* Mobile Sidebar Backdrop */}
-      {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg-base)" }}>
+      {/* Top Universal Header */}
+      <UnifiedHeader />
 
-      {/* Sidebar Drawer */}
-      <aside className={`workspace-sidebar ${open ? "open" : ""}`}>
-        <div className="workspace-brand">
-          <span className="workspace-mark">✦</span>
-          <span>
-            ILLENIUM<small>2026</small>
-          </span>
-          <button className="sidebar-close-btn" onClick={() => setOpen(false)} aria-label="Close sidebar">
-            ✕
-          </button>
-        </div>
-
-        <div className="workspace-context">
-          <span className="context-dot" /> {config.label}
-        </div>
-
-        <nav className="workspace-nav">
-          {config.nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={pathname === item.href || pathname.startsWith(item.href + "/") ? "selected" : ""}
-              onClick={() => setOpen(false)}
-            >
-              <span>{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="sidebar-bottom">
-          <Link href="/" className="sidebar-link" onClick={() => setOpen(false)}>
-            <span>↗</span> Public site
-          </Link>
-          <button className="sidebar-link" onClick={signOut}>
-            <span>⇥</span> Log out
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content Viewport */}
-      <div className="workspace-main">
-        <header className="workspace-topbar">
-          <button className="sidebar-toggle" onClick={() => setOpen(!open)} aria-label="Toggle navigation">
-            ☰
-          </button>
+      <div style={{ display: "flex", flex: 1 }}>
+        {/* Desktop & Mobile Sidebar */}
+        <aside
+          style={{
+            width: "260px",
+            background: "var(--bg-surface)",
+            borderRight: "1px solid var(--line)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: "1.5rem 1rem",
+            flexShrink: 0
+          }}
+        >
           <div>
-            <span className="topbar-kicker">{config.label}</span>
-            <span className="topbar-title">{config.title}</span>
+            {/* Context Badge */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.6rem 0.85rem",
+                borderRadius: "var(--radius-sm)",
+                background: "rgba(255, 255, 255, 0.03)",
+                border: "1px solid var(--line)",
+                marginBottom: "1.5rem"
+              }}
+            >
+              <div
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: role === "admin" ? "var(--mag)" : role === "judge" ? "var(--cyan)" : "var(--acid)",
+                  boxShadow: `0 0 8px ${role === "admin" ? "var(--mag)" : role === "judge" ? "var(--cyan)" : "var(--acid)"}`
+                }}
+              />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--bone)" }}>
+                  {config.label}
+                </span>
+                <span style={{ fontSize: "0.7rem", color: "var(--bone-dim)" }}>
+                  {config.title}
+                </span>
+              </div>
+            </div>
+
+            {/* Navigation items */}
+            <nav style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+              {config.nav.map((item) => {
+                const IconComponent = item.icon;
+                const isSelected = pathname === item.href || (item.href !== "/leaderboard" && item.href !== "/events" && pathname.startsWith(item.href));
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      padding: "0.65rem 0.85rem",
+                      borderRadius: "var(--radius-sm)",
+                      fontSize: "0.875rem",
+                      fontWeight: isSelected ? 600 : 500,
+                      color: isSelected ? "var(--bone)" : "var(--bone-dim)",
+                      background: isSelected ? "var(--bg-surface-elevated)" : "transparent",
+                      border: isSelected ? "1px solid var(--line-strong)" : "1px solid transparent",
+                      transition: "all 0.15s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                        e.currentTarget.style.color = "var(--bone)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "var(--bone-dim)";
+                      }
+                    }}
+                  >
+                    <IconComponent
+                      size={16}
+                      style={{
+                        color: isSelected ? "var(--acid)" : "var(--bone-dim)"
+                      }}
+                    />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
-          <div className="topbar-right">
-            <span className="live-pill">
-              <i /> Live system
-            </span>
-            <button className="avatar-button" onClick={signOut} aria-label="Log out" title="Log out">
-              ↪
+
+          {/* Sidebar Bottom Controls */}
+          <div
+            style={{
+              paddingTop: "1rem",
+              borderTop: "1px solid var(--line)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.4rem"
+            }}
+          >
+            <Link
+              href="/"
+              className="btn btn-ghost btn-sm"
+              style={{ justifyContent: "flex-start", gap: "0.6rem" }}
+            >
+              <ExternalLink size={14} />
+              <span>Public Landing</span>
+            </Link>
+            <button
+              onClick={signOut}
+              className="btn btn-ghost btn-sm"
+              style={{ justifyContent: "flex-start", gap: "0.6rem", color: "var(--mag)" }}
+            >
+              <LogOut size={14} />
+              <span>Sign Out</span>
             </button>
           </div>
-        </header>
+        </aside>
 
-        <main className="workspace-content">{children}</main>
+        {/* Main Workspace Viewport */}
+        <main
+          style={{
+            flex: 1,
+            padding: "2rem",
+            maxWidth: "1400px",
+            margin: "0 auto",
+            width: "100%",
+            overflowX: "hidden"
+          }}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

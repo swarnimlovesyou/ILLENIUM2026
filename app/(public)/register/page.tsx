@@ -302,7 +302,7 @@ export default function RegisterPage() {
                       <div style={{ fontWeight: 700, fontSize: "1rem" }}>{e.name}</div>
                       <div className="muted" style={{ fontSize: ".8rem" }}>{e.category} · {e.venue}</div>
                       <div style={{ marginTop: ".5rem", fontSize: ".75rem", color: isSelected ? "var(--violet)" : "var(--muted)" }}>
-                        {isSelected ? "✓ Selected" : "+ Click to select"}
+                        {isSelected ? "Selected" : "Click to select"}
                       </div>
                     </div>
                   );
