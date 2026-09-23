@@ -11,7 +11,8 @@ import {
   Lock,
   Mail,
   KeyRound,
-  CheckCircle2
+  CheckCircle2,
+  UserCheck
 } from "lucide-react";
 import { UnifiedHeader } from "@/components/layout/unified-header";
 
@@ -56,6 +57,9 @@ export default function LoginPage() {
         } else if (targetEmail.includes("judge")) {
           window.location.href = "/judge";
           return;
+        } else if (targetEmail.includes("participant") || targetEmail.includes("user")) {
+          window.location.href = "/participant/dashboard";
+          return;
         }
         setMessage(`${error?.message || "Invalid credentials"}. (Demo default is AdminPass2026!)`);
         setLoading(false);
@@ -78,6 +82,8 @@ export default function LoginPage() {
           redirectUrl = "/oc/scanner";
         } else if (profile?.role === "judge") {
           redirectUrl = "/judge";
+        } else {
+          redirectUrl = "/participant/dashboard";
         }
       }
 
@@ -102,6 +108,11 @@ export default function LoginPage() {
   const setJudgeDemo = () => {
     setEmail("judge@example.com");
     setPassword("JudgePass2026!");
+  };
+
+  const setParticipantDemo = () => {
+    setEmail("participant@example.com");
+    setPassword("Illenium2026!");
   };
 
   return (
@@ -258,32 +269,41 @@ export default function LoginPage() {
             >
               Quick Test Credentials
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
+              <button
+                type="button"
+                onClick={setParticipantDemo}
+                className="btn btn-secondary btn-sm"
+                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
+              >
+                <UserCheck size={13} style={{ color: "var(--acid)" }} />
+                <span>Participant</span>
+              </button>
               <button
                 type="button"
                 onClick={setAdminDemo}
                 className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem" }}
+                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
               >
-                <Shield size={12} style={{ color: "var(--acid)" }} />
+                <Shield size={13} style={{ color: "var(--amber, #f59e0b)" }} />
                 <span>Admin</span>
               </button>
               <button
                 type="button"
                 onClick={setOcDemo}
                 className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem" }}
+                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
               >
-                <QrCode size={12} style={{ color: "var(--cyan)" }} />
-                <span>Scanner</span>
+                <QrCode size={13} style={{ color: "var(--cyan)" }} />
+                <span>OC Scanner</span>
               </button>
               <button
                 type="button"
                 onClick={setJudgeDemo}
                 className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem" }}
+                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
               >
-                <Gavel size={12} style={{ color: "var(--mag)" }} />
+                <Gavel size={13} style={{ color: "var(--mag)" }} />
                 <span>Judge</span>
               </button>
             </div>

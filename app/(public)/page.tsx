@@ -260,11 +260,12 @@ export default function IlleniumWallHome() {
         <h2>Bring your<br />college</h2>
         <p className="lede">One student claims the college and becomes its contingent leader. They add the roster, enter the events, and collect a sealed envelope of credentials at the contingent leaders' meet. Everything after that runs through them.</p>
         <div className="run" style={{ lineHeight: 1.1 }}>
-          <Link href="/register" className="L3">Register your contingent</Link><br />
-          <Link href="/register" className="L2">Become a campus ambassador</Link><br />
-          <Link href="/register" className="L1">Enter as an independent</Link>
+          <Link href="/register?mode=leader" className="L3">Register your contingent</Link><br />
+          <Link href="/register?mode=join" className="L2">Join a contingency (7-Step Wizard)</Link><br />
+          <Link href="/register?mode=on-the-spot" className="L1">Enter as an independent</Link><br />
+          <Link href="/register?mode=status" className="L2" style={{ color: "var(--acid)" }}>Track Approval & Review Status</Link>
         </div>
-        <p className="mcap" style={{ marginTop: 26 }}>Registration opens with the brochure.</p>
+        <p className="mcap" style={{ marginTop: 26 }}>Official registration open for invited colleges across India.</p>
       </section>
     </>
   );
