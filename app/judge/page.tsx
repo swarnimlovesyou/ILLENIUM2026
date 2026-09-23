@@ -8,7 +8,6 @@ import {
   Lock,
   Save,
   CheckCircle2,
-  SlidersHorizontal,
   Info,
   Sparkles,
   ShieldCheck
@@ -21,8 +20,10 @@ export default function JudgePortalPage() {
   const [contingents, setContingents] = useState<Contingent[]>([]);
   const [selectedContingentId, setSelectedContingentId] = useState("");
 
-  // Marks keyed by criterionId: 0-100
+  // Numeric marks keyed by criterionId: 0-100
   const [marks, setMarks] = useState<Record<string, number>>({});
+  // Raw string inputs to allow user to type and clear gracefully
+  const [rawInputs, setRawInputs] = useState<Record<string, string>>({});
   const [submittedMessage, setSubmittedMessage] = useState("");
   const [isDraft, setIsDraft] = useState(false);
 
@@ -40,9 +41,9 @@ export default function JudgePortalPage() {
     const crit = masterStore.getCriteriaByEvent(eventId);
     if (!crit.length) {
       const fallback: ScoringCriterion[] = [
-        { id: `crit-${eventId}-1`, eventId, name: "Execution & Technique", maxScore: 100, weight: 1.0, description: "Technical precision, mastery, and error-free execution." },
-        { id: `crit-${eventId}-2`, eventId, name: "Creativity & Originality", maxScore: 100, weight: 1.0, description: "Innovation, flair, unique conceptualization." },
-        { id: `crit-${eventId}-3`, eventId, name: "Stage Presence & Impact", maxScore: 100, weight: 1.0, description: "Audience connection, poise, overall delivery." }
+        { id: `crit-${eventId}-1`, eventId, name: "Technique & Form", maxScore: 100, weight: 1.0, description: "Precision and skill execution" },
+        { id: `crit-${eventId}-2`, eventId, name: "Musicality & Rhythm", maxScore: 100, weight: 1.0, description: "Flow with beats" },
+        { id: `crit-${eventId}-3`, eventId, name: "Stage Impact", maxScore: 100, weight: 1.0, description: "Crowd response and presence" }
       ];
       setCriteria(fallback);
     } else {
@@ -54,12 +55,46 @@ export default function JudgePortalPage() {
     setSelectedEventId(id);
     loadCriteria(id);
     setMarks({});
+    setRawInputs({});
     setSubmittedMessage("");
   }
 
-  function handleScoreChange(criterionId: string, val: number) {
-    const clamped = Math.max(0, Math.min(100, val || 0));
-    setMarks((prev) => ({ ...prev, [criterionId]: clamped }));
+  function handleContingentChange(id: string) {
+    setSelectedContingentId(id);
+    setMarks({});
+    setRawInputs({});
+    setSubmittedMessage("");
+  }
+
+  function handleScoreInputChange(criterionId: string, val: string) {
+    // If blank, allow empty typing state while setting calculation score to 0
+    if (val === "") {
+      setRawInputs((prev) => ({ ...prev, [criterionId]: "" }));
+      setMarks((prev) => ({ ...prev, [criterionId]: 0 }));
+      return;
+    }
+
+    // Filter non-numeric characters
+    const clean = val.replace(/[^0-9]/g, "");
+    if (!clean) return;
+
+    let num = parseInt(clean, 10);
+    if (isNaN(num)) return;
+
+    // Enforce 0-100 range strictly
+    if (num > 100) num = 100;
+    if (num < 0) num = 0;
+
+    setRawInputs((prev) => ({ ...prev, [criterionId]: String(num) }));
+    setMarks((prev) => ({ ...prev, [criterionId]: num }));
+  }
+
+  function handleScoreBlur(criterionId: string) {
+    // If left empty on blur, normalize to "0"
+    if (!rawInputs[criterionId] || rawInputs[criterionId].trim() === "") {
+      setRawInputs((prev) => ({ ...prev, [criterionId]: "0" }));
+      setMarks((prev) => ({ ...prev, [criterionId]: 0 }));
+    }
   }
 
   function handleSubmit(status: "draft" | "submitted") {
@@ -72,7 +107,7 @@ export default function JudgePortalPage() {
     const currentContingent = contingents.find((c) => c.id === selectedContingentId);
 
     criteria.forEach((c) => {
-      const raw = marks[c.id] || 0;
+      const raw = marks[c.id] !== undefined ? marks[c.id] : 0;
       masterStore.submitJudgeScore({
         eventId: selectedEventId,
         judgeProfileId: "JUDGE-VIKRAM-SEN",
@@ -209,7 +244,7 @@ export default function JudgePortalPage() {
               <select
                 className="form-control"
                 value={selectedContingentId}
-                onChange={(e) => setSelectedContingentId(e.target.value)}
+                onChange={(e) => handleContingentChange(e.target.value)}
               >
                 <option value="">-- Choose Contestant Entry --</option>
                 {contingents.map((c) => (
@@ -221,7 +256,7 @@ export default function JudgePortalPage() {
             </div>
 
             <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Format & Rule Bounds</label>
+              <label className="form-label">Format &amp; Rule Bounds</label>
               <div
                 style={{
                   padding: "0.75rem 1rem",
@@ -261,7 +296,7 @@ export default function JudgePortalPage() {
                 Criteria Scoring — {selectedContingent ? selectedContingent.name : "Select Contestant"}
               </h3>
               <p style={{ fontSize: "0.85rem", marginTop: "0.2rem" }}>
-                Score each criterion independently. Sliders adjust score in real-time.
+                Enter raw score (0–100) for each criterion. Weighted score calculates automatically in real time.
               </p>
             </div>
 
@@ -296,7 +331,13 @@ export default function JudgePortalPage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             {criteria.map((c, index) => {
-              const currentMark = marks[c.id] || 0;
+              const currentVal =
+                rawInputs[c.id] !== undefined
+                  ? rawInputs[c.id]
+                  : marks[c.id] !== undefined
+                  ? String(marks[c.id])
+                  : "";
+
               return (
                 <div
                   key={c.id}
@@ -305,63 +346,67 @@ export default function JudgePortalPage() {
                     border: "1px solid var(--line)",
                     padding: "1.25rem 1.5rem",
                     borderRadius: "var(--radius-sm)",
-                    display: "grid",
-                    gridTemplateColumns: "1.5fr 2fr 120px",
+                    display: "flex",
                     alignItems: "center",
-                    gap: "1.5rem"
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    gap: "1.25rem"
                   }}
                 >
-                  <div>
+                  <div style={{ flex: 1, minWidth: "260px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                       <span className="mono" style={{ color: "var(--acid)", fontWeight: 700 }}>
                         #{String(index + 1).padStart(2, "0")}
                       </span>
-                      <span style={{ fontWeight: 600, color: "var(--bone)", fontSize: "0.95rem" }}>
+                      <span style={{ fontWeight: 600, color: "var(--bone)", fontSize: "1rem" }}>
                         {c.name}
                       </span>
                       <span className="badge badge-neutral" style={{ fontSize: "0.65rem" }}>
                         {c.weight}x Weight
                       </span>
                     </div>
-                    <p style={{ marginTop: "0.35rem", fontSize: "0.8rem", color: "var(--bone-dim)" }}>
+                    <p style={{ marginTop: "0.35rem", fontSize: "0.85rem", color: "var(--bone-dim)", margin: "0.35rem 0 0" }}>
                       {c.description}
                     </p>
                   </div>
 
-                  <div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={100}
-                      value={currentMark}
-                      onChange={(e) => handleScoreChange(c.id, Number(e.target.value))}
+                  {/* Manual Numeric Score Input: [  85  ] / 100 */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                    <div
                       style={{
-                        width: "100%",
-                        accentColor: "var(--acid)",
-                        cursor: "pointer"
+                        display: "flex",
+                        alignItems: "center",
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--line-strong)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "0.15rem 0.5rem"
                       }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "flex-end" }}>
-                    <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={currentMark}
-                      onChange={(e) => handleScoreChange(c.id, Number(e.target.value))}
-                      className="form-control mono"
-                      style={{
-                        width: "70px",
-                        textAlign: "center",
-                        fontSize: "1.1rem",
-                        fontWeight: 700,
-                        color: "var(--acid)",
-                        padding: "0.4rem"
-                      }}
-                    />
-                    <span className="mono" style={{ color: "var(--dim)", fontSize: "0.8rem" }}>
-                      / 100
+                    >
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        placeholder="0"
+                        value={currentVal}
+                        onChange={(e) => handleScoreInputChange(c.id, e.target.value)}
+                        onBlur={() => handleScoreBlur(c.id)}
+                        className="mono"
+                        style={{
+                          width: "64px",
+                          textAlign: "center",
+                          fontSize: "1.25rem",
+                          fontWeight: 700,
+                          color: "var(--acid)",
+                          background: "transparent",
+                          border: "none",
+                          outline: "none",
+                          padding: "0.45rem 0"
+                        }}
+                        aria-label={`Score for ${c.name}`}
+                      />
+                    </div>
+                    <span className="mono" style={{ color: "var(--dim)", fontSize: "0.95rem", fontWeight: 600 }}>
+                      / {c.maxScore}
                     </span>
                   </div>
                 </div>
@@ -394,7 +439,7 @@ export default function JudgePortalPage() {
               style={{ gap: "0.5rem" }}
             >
               <Lock size={15} />
-              <span>Submit & Seal Score</span>
+              <span>Submit &amp; Seal Score</span>
             </button>
           </div>
         </div>
