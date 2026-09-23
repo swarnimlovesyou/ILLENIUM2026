@@ -297,14 +297,14 @@ export default function RegisterPage() {
                   }}
                 >
                   <div>
-                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95, color: "#ffffff" }}>
                       REGISTER YOUR CONTINGENT
                     </h3>
-                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.95rem", color: "#ffffff", lineHeight: 1.45, fontWeight: 500 }}>
                       For the student becoming the Contingency Leader. Submit claim to Executive Core.
                     </p>
                   </div>
-                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end", color: "#ffffff" }}>↗</div>
                 </div>
 
                 {/* Route Card 2: Join */}
@@ -334,14 +334,14 @@ export default function RegisterPage() {
                   }}
                 >
                   <div>
-                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95, color: "#ffffff" }}>
                       JOIN A CONTINGENCY
                     </h3>
-                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.95rem", color: "#ffffff", lineHeight: 1.45, fontWeight: 500 }}>
                       Enter your college&apos;s contingency code (e.g. ILLENIUM26) and start the 7-step join flow.
                     </p>
                   </div>
-                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end", color: "#ffffff" }}>↗</div>
                 </div>
 
                 {/* Route Card 3: On The Spot */}
@@ -368,14 +368,14 @@ export default function RegisterPage() {
                   }}
                 >
                   <div>
-                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95, color: "#ffffff" }}>
                       ENTER ON THE DAY
                     </h3>
-                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.95rem", color: "#ffffff", lineHeight: 1.45, fontWeight: 500 }}>
                       On-the-spot route for open categories and non-contingency independent entrants.
                     </p>
                   </div>
-                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end", color: "#ffffff" }}>↗</div>
                 </div>
 
                 {/* Route Card 4: Status Tracker */}
@@ -402,14 +402,14 @@ export default function RegisterPage() {
                   }}
                 >
                   <div>
-                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95, color: "#ffffff" }}>
                       CHECK APPROVAL STATUS
                     </h3>
-                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
-                      Review progress on your Contingency Leader claim and access credentials.
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.95rem", color: "#ffffff", lineHeight: 1.45, fontWeight: 500 }}>
+                      Review progress on your Contingent Leader claim and access credentials.
                     </p>
                   </div>
-                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end", color: "#ffffff" }}>↗</div>
                 </div>
               </div>
             </div>

@@ -74,8 +74,8 @@ export default function ParticipantDashboard() {
             className="btn"
             style={{
               background: "linear-gradient(135deg, #ff238f 0%, #ff529a 100%)",
-              color: "#07070a",
-              fontWeight: 700,
+              color: "#ffffff",
+              fontWeight: 800,
               fontSize: "0.875rem",
               padding: "0.6rem 1.25rem",
               borderRadius: "8px",
@@ -137,7 +137,7 @@ export default function ParticipantDashboard() {
             <Link
               href="/participant/id"
               className="btn btn-primary btn-sm"
-              style={{ background: "#ff238f", borderColor: "#ff238f", color: "#07070a", fontWeight: 700 }}
+              style={{ background: "#ff238f", borderColor: "#ff238f", color: "#ffffff", fontWeight: 800 }}
             >
               <QrCode size={14} />
               <span>View QR Pass</span>

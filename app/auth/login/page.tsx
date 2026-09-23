@@ -8,11 +8,10 @@ import {
   QrCode,
   Gavel,
   ArrowRight,
-  Lock,
   Mail,
   KeyRound,
-  CheckCircle2,
-  UserCheck
+  UserCheck,
+  Sparkles
 } from "lucide-react";
 import { UnifiedHeader } from "@/components/layout/unified-header";
 
@@ -116,7 +115,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg-base)" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#07070a", color: "#f1efe7" }}>
       <UnifiedHeader />
 
       <div
@@ -125,44 +124,77 @@ export default function LoginPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "2rem 1rem"
+          padding: "3rem 1.25rem 5rem"
         }}
       >
+        {/* Anton Paper-White Login Card */}
         <div
-          className="card"
           style={{
             width: "100%",
-            maxWidth: "440px",
-            background: "var(--bg-surface-elevated)",
-            border: "1px solid var(--line-strong)",
-            boxShadow: "var(--shadow-lg)"
+            maxWidth: "480px",
+            background: "#f1efe7",
+            color: "#070707",
+            borderRadius: "26px 0 0 26px",
+            padding: "clamp(2rem, 5vw, 3rem)",
+            boxShadow: "0 25px 80px rgba(0, 0, 0, 0.7)",
+            position: "relative"
           }}
         >
-          {/* Brand Header */}
-          <div style={{ marginBottom: "1.5rem" }}>
+          {/* Top Meta */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.5rem",
+              borderBottom: "1px solid rgba(7,7,7,0.18)",
+              paddingBottom: "0.85rem"
+            }}
+          >
+            <div style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.06em", color: "#070707" }}>
+              / AUTH / SIGN IN
+            </div>
+            <div style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.8rem", letterSpacing: "0.06em", color: "#8d8a82" }}>
+              ILLENIUM™ 2026
+            </div>
+          </div>
+
+          {/* Header Brand */}
+          <div style={{ marginBottom: "1.75rem" }}>
             <div
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "var(--acid)",
-                color: "var(--ink)",
+                width: "42px",
+                height: "42px",
+                background: "#ff238f",
+                color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontWeight: 800,
-                fontSize: "16px",
-                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "18px",
+                fontFamily: '"Anton", Impact, sans-serif',
                 marginBottom: "1rem"
               }}
             >
               IL
             </div>
-            <h1 style={{ fontSize: "1.75rem", fontWeight: 700, letterSpacing: "-0.02em" }}>
-              Welcome back.
+
+            <h1
+              style={{
+                fontFamily: '"Anton", Impact, sans-serif',
+                fontSize: "clamp(2.4rem, 5vw, 3.2rem)",
+                lineHeight: 0.9,
+                textTransform: "uppercase",
+                letterSpacing: "-0.02em",
+                margin: "0 0 0.5rem",
+                color: "#070707"
+              }}
+            >
+              WELCOME <span style={{ color: "#ff238f" }}>BACK.</span>
             </h1>
-            <p style={{ fontSize: "0.875rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-              Sign in to your ILLENIUM 2026 operations or passport console.
+
+            <p style={{ fontSize: "0.95rem", color: "#4c4a45", margin: 0, lineHeight: 1.4 }}>
+              Sign in to your ILLENIUM 2026 operations portal or participant passport.
             </p>
           </div>
 
@@ -171,53 +203,75 @@ export default function LoginPage() {
               e.preventDefault();
               login();
             }}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}
           >
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Email Address</label>
+            <div>
+              <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.4rem", color: "#070707" }}>
+                Email Address
+              </label>
               <div style={{ position: "relative" }}>
                 <Mail
                   size={16}
                   style={{
                     position: "absolute",
-                    left: "12px",
+                    left: "14px",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    color: "var(--dim)"
+                    color: "#666"
                   }}
                 />
                 <input
                   type="email"
-                  className="form-control"
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ paddingLeft: "38px" }}
+                  style={{
+                    width: "100%",
+                    height: "54px",
+                    border: "1.5px solid #161616",
+                    background: "#ffffff",
+                    color: "#070707",
+                    paddingLeft: "42px",
+                    paddingRight: "14px",
+                    outline: "none",
+                    fontSize: "0.95rem"
+                  }}
                   required
                 />
               </div>
             </div>
 
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Password</label>
+            <div>
+              <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.4rem", color: "#070707" }}>
+                Password
+              </label>
               <div style={{ position: "relative" }}>
                 <KeyRound
                   size={16}
                   style={{
                     position: "absolute",
-                    left: "12px",
+                    left: "14px",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    color: "var(--dim)"
+                    color: "#666"
                   }}
                 />
                 <input
                   type="password"
-                  className="form-control"
-                  placeholder="Enter password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ paddingLeft: "38px" }}
+                  style={{
+                    width: "100%",
+                    height: "54px",
+                    border: "1.5px solid #161616",
+                    background: "#ffffff",
+                    color: "#070707",
+                    paddingLeft: "42px",
+                    paddingRight: "14px",
+                    outline: "none",
+                    fontSize: "0.95rem"
+                  }}
                   required
                 />
               </div>
@@ -226,12 +280,12 @@ export default function LoginPage() {
             {message && (
               <div
                 style={{
-                  padding: "0.75rem 1rem",
-                  borderRadius: "var(--radius-sm)",
-                  background: "rgba(255, 45, 111, 0.1)",
-                  border: "1px solid rgba(255, 45, 111, 0.3)",
-                  color: "var(--mag)",
-                  fontSize: "0.8rem"
+                  padding: "0.85rem 1rem",
+                  background: "#ffd8e9",
+                  border: "1.5px solid #ff238f",
+                  color: "#070707",
+                  fontSize: "0.85rem",
+                  fontWeight: 600
                 }}
               >
                 {message}
@@ -240,70 +294,143 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="btn btn-primary"
               disabled={loading}
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              style={{
+                width: "100%",
+                height: "56px",
+                border: "none",
+                background: "#070707",
+                color: "#ffffff",
+                fontFamily: '"Anton", Impact, sans-serif',
+                fontSize: "1.15rem",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                marginTop: "0.35rem",
+                transition: "all 0.15s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#ff238f";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#070707";
+              }}
             >
-              {loading ? "Authenticating..." : "Sign In"}
-              <ArrowRight size={15} />
+              <span>{loading ? "Authenticating..." : "Sign In"}</span>
+              <ArrowRight size={16} />
             </button>
           </form>
 
-          {/* 1-Click Role Quick Fill */}
+          {/* 1-Click Role Quick Fill with high contrast */}
           <div
             style={{
-              marginTop: "1.5rem",
+              marginTop: "1.75rem",
               paddingTop: "1.25rem",
-              borderTop: "1px solid var(--line)"
+              borderTop: "1px solid rgba(7,7,7,0.18)"
             }}
           >
             <div
               style={{
-                fontSize: "0.7rem",
+                fontFamily: '"Anton", Impact, sans-serif',
+                fontSize: "0.8rem",
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
-                color: "var(--dim)",
-                fontWeight: 600,
+                color: "#666",
                 marginBottom: "0.75rem"
               }}
             >
               Quick Test Credentials
             </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
               <button
                 type="button"
                 onClick={setParticipantDemo}
-                className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
+                style={{
+                  border: "1.5px solid #161616",
+                  background: "transparent",
+                  color: "#070707",
+                  padding: "10px",
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "0.85rem",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.35rem"
+                }}
               >
-                <UserCheck size={13} style={{ color: "var(--acid)" }} />
+                <UserCheck size={14} style={{ color: "#ff238f" }} />
                 <span>Participant</span>
               </button>
+
               <button
                 type="button"
                 onClick={setAdminDemo}
-                className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
+                style={{
+                  border: "1.5px solid #161616",
+                  background: "transparent",
+                  color: "#070707",
+                  padding: "10px",
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "0.85rem",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.35rem"
+                }}
               >
-                <Shield size={13} style={{ color: "var(--amber, #f59e0b)" }} />
+                <Shield size={14} style={{ color: "#070707" }} />
                 <span>Admin</span>
               </button>
+
               <button
                 type="button"
                 onClick={setOcDemo}
-                className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
+                style={{
+                  border: "1.5px solid #161616",
+                  background: "transparent",
+                  color: "#070707",
+                  padding: "10px",
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "0.85rem",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.35rem"
+                }}
               >
-                <QrCode size={13} style={{ color: "var(--cyan)" }} />
+                <QrCode size={14} style={{ color: "#070707" }} />
                 <span>OC Scanner</span>
               </button>
+
               <button
                 type="button"
                 onClick={setJudgeDemo}
-                className="btn btn-secondary btn-sm"
-                style={{ gap: "0.35rem", fontSize: "0.75rem", justifyContent: "center" }}
+                style={{
+                  border: "1.5px solid #161616",
+                  background: "transparent",
+                  color: "#070707",
+                  padding: "10px",
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "0.85rem",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.35rem"
+                }}
               >
-                <Gavel size={13} style={{ color: "var(--mag)" }} />
+                <Gavel size={14} style={{ color: "#ff238f" }} />
                 <span>Judge</span>
               </button>
             </div>
@@ -311,14 +438,14 @@ export default function LoginPage() {
 
           <div
             style={{
-              marginTop: "1.25rem",
+              marginTop: "1.5rem",
               textAlign: "center",
-              fontSize: "0.85rem",
-              color: "var(--bone-dim)"
+              fontSize: "0.9rem",
+              color: "#4c4a45"
             }}
           >
             New participant?{" "}
-            <Link href="/register" style={{ color: "var(--acid)", fontWeight: 600 }}>
+            <Link href="/register" style={{ color: "#ff238f", fontWeight: 700, textDecoration: "underline" }}>
               Register for Pass
             </Link>
           </div>
