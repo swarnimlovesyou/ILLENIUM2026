@@ -4,23 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { UnifiedHeader } from "@/components/layout/unified-header";
 import {
-  Users,
-  Building2,
-  Ticket,
-  Clock,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
   AlertTriangle,
   Upload,
-  CreditCard,
-  ShieldCheck,
-  Calendar,
-  Sparkles,
-  Search,
   Copy,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 
 const INVITED_COLLEGES = [
@@ -43,6 +35,7 @@ const INVITED_COLLEGES = [
 
 interface EventChoice {
   id: string;
+  code: string;
   name: string;
   category: string;
   time: string;
@@ -51,18 +44,18 @@ interface EventChoice {
 }
 
 const FESTIVAL_EVENTS: EventChoice[] = [
-  { id: "e-01", name: "Seven To Smoke", category: "Performing Arts", time: "Day 1 · 11:00", venue: "Auditorium", types: ["CC", "PRNC"] },
-  { id: "e-02", name: "Teqball Thunder", category: "Informals", time: "Day 1 · 11:00", venue: "Atrium", types: ["CC", "PRNC", "OD"] },
-  { id: "e-03", name: "Desi To Drip", category: "Fashion & Dance", time: "Day 1 · 14:00", venue: "Auditorium", types: ["CC"] },
-  { id: "e-04", name: "Mr. & Ms. Illenium™", category: "Flagship Informals", time: "Day 1 · 14:00", venue: "Atrium", types: ["CC", "PRNC"] },
-  { id: "e-05", name: "D.R.A.M.A (Street Play)", category: "Theatre & Drama", time: "Day 1 · 16:30", venue: "Quad", types: ["CC"] },
-  { id: "e-06", name: "Homeroom Harmonies", category: "Performing Arts", time: "Day 1 · 18:30", venue: "Auditorium", types: ["CC", "PRNC"] },
-  { id: "e-07", name: "Monochromatic Mastery", category: "Fine Arts", time: "Day 1 · 09:30", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
-  { id: "e-08", name: "Sustainacity", category: "Business & Management", time: "Day 1 · 14:00", venue: "Quad Room 2", types: ["CC", "PRNC"] },
-  { id: "e-09", name: "Ani-mate Your Fate", category: "Fine Arts", time: "Day 1 · 11:00", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
-  { id: "e-10", name: "Mirror, Mirror", category: "Fine Arts", time: "Day 1 · 16:30", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
-  { id: "e-11", name: "Vintage Vogue", category: "Informals", time: "Day 1 · 16:30", venue: "Quad", types: ["CC", "PRNC"] },
-  { id: "e-12", name: "Battle of the Bands", category: "Performing Arts", time: "Day 2 · 16:00", venue: "Main Stage", types: ["CC"] }
+  { id: "e-01", code: "E-101", name: "SEVEN TO SMOKE", category: "PERFORMING ARTS", time: "11:00", venue: "Auditorium", types: ["CC", "PRNC"] },
+  { id: "e-02", code: "E-102", name: "TEQBALL THUNDER", category: "INFORMALS", time: "11:00", venue: "Atrium", types: ["CC", "PRNC", "OD"] },
+  { id: "e-03", code: "E-103", name: "DESI TO DRIP", category: "PERFORMING ARTS", time: "14:00", venue: "Auditorium", types: ["CC"] },
+  { id: "e-04", code: "E-104", name: "MR. & MS. ILLENIUM™", category: "INFORMALS", time: "14:00", venue: "Atrium", types: ["CC", "PRNC"] },
+  { id: "e-05", code: "E-105", name: "D.R.A.M.A (STREET PLAY)", category: "THEATRE & DRAMA", time: "16:30", venue: "Auditorium", types: ["CC"] },
+  { id: "e-06", code: "E-106", name: "MONOCHROMATIC MASTERY", category: "FINE ARTS", time: "09:30", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
+  { id: "e-07", code: "E-107", name: "ANI-MATE YOUR FATE", category: "FINE ARTS", time: "11:00", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
+  { id: "e-08", code: "E-108", name: "SUSTAINACITY", category: "BUSINESS", time: "14:00", venue: "Quad", types: ["CC"] },
+  { id: "e-09", code: "E-109", name: "MIRROR, MIRROR", category: "FINE ARTS", time: "16:30", venue: "Studio One", types: ["CC", "PRNC", "OD"] },
+  { id: "e-10", code: "E-110", name: "VINTAGE VOGUE", category: "INFORMALS", time: "16:30", venue: "Quad", types: ["CC", "PRNC"] },
+  { id: "e-11", code: "E-111", name: "HOMEROOM HARMONIES", category: "PERFORMING ARTS", time: "18:30", venue: "Auditorium", types: ["CC", "PRNC"] },
+  { id: "e-12", code: "E-112", name: "STALLS & INFORMALS", category: "INFORMALS", time: "18:30", venue: "Quad", types: ["OD", "PRNC"] }
 ];
 
 type RegistrationMode = "home" | "leader" | "join" | "on-the-spot" | "status" | "done";
@@ -92,7 +85,9 @@ export default function RegisterPage() {
     // Leader specific
     leaderCollege: "",
     leaderRules: false,
-    leaderStatus: "sent" as "sent" | "review" | "approved"
+    leaderStatus: "sent" as "sent" | "review" | "approved",
+    // Spot specific
+    spotEvents: ["e-12"] as string[]
   });
 
   const [toastMessage, setToastMessage] = useState("");
@@ -141,6 +136,18 @@ export default function RegisterPage() {
     });
   };
 
+  const toggleSpotEvent = (id: string) => {
+    setFormData((prev) => {
+      const exists = prev.spotEvents.includes(id);
+      return {
+        ...prev,
+        spotEvents: exists
+          ? prev.spotEvents.filter((x) => x !== id)
+          : [...prev.spotEvents, id]
+      };
+    });
+  };
+
   const handleLeaderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.leaderCollege) {
@@ -149,722 +156,869 @@ export default function RegisterPage() {
     }
     setFormData((prev) => ({ ...prev, leaderStatus: "sent" }));
     setMode("status");
-    showToast("Leader Request Submitted to Executive Core");
+    showToast("Leader Application Submitted to Executive Core");
   };
 
   const handleJoinSubmit = () => {
     if (!formData.truthConfirmed) {
-      alert("Please confirm that all details are accurate.");
+      alert("Please confirm your identity and roster declaration.");
       return;
     }
     setMode("done");
-    showToast("Registration Successfully Submitted");
+  };
+
+  const handleSpotSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.fullName || !formData.phone) {
+      alert("Please enter your name and phone number.");
+      return;
+    }
+    setMode("done");
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg-base)", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: "#07070a", color: "#f1efe7", display: "flex", flexDirection: "column" }}>
       <UnifiedHeader />
 
-      {/* Toast Notification */}
-      {toastMessage && (
+      <div style={{ flex: 1, padding: "2.5rem 1.25rem 5rem", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+        {/* Main Anton Paper Panel */}
         <div
           style={{
-            position: "fixed",
-            bottom: "24px",
-            right: "24px",
-            zIndex: 1000,
-            background: "var(--acid)",
-            color: "var(--ink)",
-            padding: "0.75rem 1.25rem",
-            borderRadius: "var(--radius-sm)",
-            fontWeight: 700,
-            fontSize: "0.85rem",
-            boxShadow: "var(--shadow-lg)",
-            animation: "fadeIn 0.2s ease"
+            width: "100%",
+            maxWidth: "1040px",
+            background: "#f1efe7",
+            color: "#070707",
+            borderRadius: "26px 0 0 26px",
+            padding: "clamp(2rem, 5vw, 3.5rem)",
+            boxShadow: "0 25px 80px rgba(0,0,0,0.6)",
+            position: "relative",
+            minHeight: "75vh"
           }}
         >
-          {toastMessage}
-        </div>
-      )}
-
-      <main style={{ maxWidth: "1000px", margin: "0 auto", width: "100%", padding: "2.5rem 1.5rem", flex: 1 }}>
-        {/* ========================================================================= */}
-        {/* VIEW 1: REGISTRATION HUB / HOME                                           */}
-        {/* ========================================================================= */}
-        {mode === "home" && (
-          <div>
-            <div style={{ marginBottom: "2.5rem" }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                  padding: "0.2rem 0.6rem",
-                  borderRadius: "999px",
-                  background: "rgba(216, 255, 46, 0.1)",
-                  border: "1px solid rgba(216, 255, 46, 0.3)",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "var(--acid)",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  marginBottom: "0.5rem"
-                }}
-              >
-                <Sparkles size={13} />
-                ILLENIUM 2026 Registration
-              </div>
-              <h1 style={{ fontSize: "2.5rem", fontWeight: 700, letterSpacing: "-0.02em" }}>
-                Festival Sign-Up & Entry
-              </h1>
-              <p style={{ marginTop: "0.4rem", fontSize: "0.95rem", maxWidth: "680px" }}>
-                Choose your entry pathway: Apply as a Contingency Leader for your college, join with an issued contingency code, enter on-the-spot on fest days, or check your approval status.
-              </p>
+          {/* Header Top Bar */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.75rem",
+              borderBottom: "1px solid rgba(7,7,7,0.18)",
+              paddingBottom: "1rem"
+            }}
+          >
+            <div style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.95rem", letterSpacing: "0.04em", color: "#070707" }}>
+              {mode === "home" && "/ REGISTER / INDEX"}
+              {mode === "leader" && "/ REGISTER / LEADER"}
+              {mode === "join" && `/ REGISTER / JOIN / STEP ${joinStep}`}
+              {mode === "on-the-spot" && "/ REGISTER / ON-THE-SPOT"}
+              {mode === "status" && "/ REGISTER / STATUS-TRACKER"}
+              {mode === "done" && "/ REGISTER / CONFIRMATION"}
             </div>
 
-            {/* 4 Primary Pathways Grid */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: "1.25rem",
-                marginBottom: "2.5rem"
-              }}
-            >
-              {/* Card 1: Contingency Leader */}
-              <div
-                onClick={() => setMode("leader")}
-                className="card card-interactive"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: "220px"
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                    <span className="badge badge-gold">College Lead</span>
-                    <Building2 size={20} style={{ color: "var(--gold)" }} />
-                  </div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.4rem" }}>
-                    Contingency Leader
-                  </h3>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)" }}>
-                    For a representative from an invited college. Submit your application to Executive Core to unlock your college's code.
-                  </p>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--gold)", fontSize: "0.85rem", fontWeight: 700, marginTop: "1rem" }}>
-                  <span>Apply as Leader</span>
-                  <ArrowRight size={14} />
-                </div>
-              </div>
-
-              {/* Card 2: Join a College */}
-              <div
-                onClick={() => {
-                  setJoinStep(1);
-                  setMode("join");
-                }}
-                className="card card-interactive"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: "220px",
-                  borderColor: "rgba(216, 255, 46, 0.4)",
-                  background: "linear-gradient(180deg, rgba(216, 255, 46, 0.04) 0%, var(--bg-card) 100%)"
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                    <span className="badge badge-acid">7-Step Fast Track</span>
-                    <Ticket size={20} style={{ color: "var(--acid)" }} />
-                  </div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.4rem" }}>
-                    Join a College Team
-                  </h3>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)" }}>
-                    Have a contingency code from your leader? Start the verified 7-step join flow to connect your identity and events.
-                  </p>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--acid)", fontSize: "0.85rem", fontWeight: 700, marginTop: "1rem" }}>
-                  <span>Enter Code & Join</span>
-                  <ArrowRight size={14} />
-                </div>
-              </div>
-
-              {/* Card 3: On The Spot Entry */}
-              <div
-                onClick={() => setMode("on-the-spot")}
-                className="card card-interactive"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: "220px"
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                    <span className="badge badge-neutral">Festival Days</span>
-                    <Clock size={20} style={{ color: "var(--cyan)" }} />
-                  </div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.4rem" }}>
-                    On The Spot Entry
-                  </h3>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)" }}>
-                    No college team? Register for open standalone events on fest days with OD designation.
-                  </p>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--cyan)", fontSize: "0.85rem", fontWeight: 700, marginTop: "1rem" }}>
-                  <span>Open Entry Form</span>
-                  <ArrowRight size={14} />
-                </div>
-              </div>
-
-              {/* Card 4: Check Status */}
-              <div
-                onClick={() => setMode("status")}
-                className="card card-interactive"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: "220px"
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                    <span className="badge badge-neutral">Live Review</span>
-                    <ShieldCheck size={20} style={{ color: "var(--mag)" }} />
-                  </div>
-                  <h3 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.4rem" }}>
-                    Check Approval Status
-                  </h3>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)" }}>
-                    Already applied as a Contingency Leader? Check if your request has been reviewed or retrieve your active code.
-                  </p>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--mag)", fontSize: "0.85rem", fontWeight: 700, marginTop: "1rem" }}>
-                  <span>Check Status</span>
-                  <ArrowRight size={14} />
-                </div>
-              </div>
+            <div style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.06em", color: "#8d8a82" }}>
+              SIGN-UP / ILLENIUM™ 2026
             </div>
           </div>
-        )}
 
-        {/* ========================================================================= */}
-        {/* VIEW 2: CONTINGENCY LEADER APPLICATION                                    */}
-        {/* ========================================================================= */}
-        {mode === "leader" && (
-          <div>
-            <button
-              onClick={() => setMode("home")}
-              className="btn btn-ghost btn-sm"
-              style={{ marginBottom: "1.5rem", gap: "0.4rem" }}
+          {/* Toast */}
+          {toastMessage && (
+            <div
+              style={{
+                position: "fixed",
+                right: "24px",
+                bottom: "24px",
+                zIndex: 90,
+                background: "#070707",
+                color: "#ffffff",
+                padding: "1rem 1.5rem",
+                fontFamily: '"Anton", Impact, sans-serif',
+                fontSize: "0.95rem",
+                textTransform: "uppercase",
+                borderRadius: "4px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+              }}
             >
-              <ArrowLeft size={14} />
-              <span>Back to Pathways</span>
-            </button>
+              {toastMessage}
+            </div>
+          )}
 
-            <div className="card">
-              <div className="card-header">
-                <div>
-                  <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>
-                    Contingency Leader Desk
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Bring Your College to ILLENIUM</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-                    Only invited colleges can register. Fill out your details below to submit your credentials to the Executive Core.
-                  </p>
+          {/* PATHWAY 1: HOME PORTAL SELECTOR */}
+          {mode === "home" && (
+            <div>
+              <h1
+                style={{
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "clamp(3.2rem, 8vw, 6.5rem)",
+                  lineHeight: 0.88,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.03em",
+                  margin: "0 0 1.5rem",
+                  color: "#070707"
+                }}
+              >
+                BRING YOUR<br />
+                <span style={{ color: "#ff238f" }}>COLLEGE.</span>
+              </h1>
+
+              <p style={{ fontSize: "1.05rem", lineHeight: 1.5, color: "#4c4a45", maxWidth: "700px", margin: "0 0 2.5rem" }}>
+                One student claims the college and becomes its Contingent Leader. They add the roster, enter the events, and collect the credentials envelope.
+                Alternatively, join your college contingent with an issued code, or enter on-the-spot.
+              </p>
+
+              {/* 4 Hero Route Cards matching Anton specification */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: "1rem"
+                }}
+              >
+                {/* Route Card 1: Leader */}
+                <div
+                  onClick={() => setMode("leader")}
+                  style={{
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "2rem",
+                    minHeight: "220px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    transition: "all 0.18s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#ff238f";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#070707";
+                    e.currentTarget.style.transform = "none";
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                      REGISTER YOUR CONTINGENT
+                    </h3>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                      For the student becoming the Contingency Leader. Submit claim to Executive Core.
+                    </p>
+                  </div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                </div>
+
+                {/* Route Card 2: Join */}
+                <div
+                  onClick={() => {
+                    setMode("join");
+                    setJoinStep(1);
+                  }}
+                  style={{
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "2rem",
+                    minHeight: "220px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    transition: "all 0.18s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#ff238f";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#070707";
+                    e.currentTarget.style.transform = "none";
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                      JOIN A CONTINGENCY
+                    </h3>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                      Enter your college&apos;s contingency code (e.g. ILLENIUM26) and start the 7-step join flow.
+                    </p>
+                  </div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                </div>
+
+                {/* Route Card 3: On The Spot */}
+                <div
+                  onClick={() => setMode("on-the-spot")}
+                  style={{
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "2rem",
+                    minHeight: "220px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    transition: "all 0.18s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#ff238f";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#070707";
+                    e.currentTarget.style.transform = "none";
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                      ENTER ON THE DAY
+                    </h3>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                      On-the-spot route for open categories and non-contingency independent entrants.
+                    </p>
+                  </div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
+                </div>
+
+                {/* Route Card 4: Status Tracker */}
+                <div
+                  onClick={() => setMode("status")}
+                  style={{
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "2rem",
+                    minHeight: "220px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    transition: "all 0.18s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#ff238f";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#070707";
+                    e.currentTarget.style.transform = "none";
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.2rem", textTransform: "uppercase", margin: 0, lineHeight: 0.95 }}>
+                      CHECK APPROVAL STATUS
+                    </h3>
+                    <p style={{ margin: "0.75rem 0 0", fontSize: "0.85rem", opacity: 0.85, lineHeight: 1.4 }}>
+                      Review progress on your Contingency Leader claim and access credentials.
+                    </p>
+                  </div>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.5rem", alignSelf: "flex-end" }}>↗</div>
                 </div>
               </div>
+            </div>
+          )}
 
-              <form onSubmit={handleLeaderSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Full Name</label>
+          {/* PATHWAY 2: CONTINGENT LEADER CLAIM */}
+          {mode === "leader" && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMode("home")}
+                style={{ background: "none", border: "none", color: "#070707", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "1.25rem" }}
+              >
+                ← BACK TO OPTIONS
+              </button>
+
+              <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.8rem, 6vw, 5rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem", color: "#070707" }}>
+                CLAIM YOUR <span style={{ color: "#ff238f" }}>COLLEGE.</span>
+              </h1>
+
+              <p style={{ fontSize: "1rem", color: "#4c4a45", lineHeight: 1.5, maxWidth: "680px", margin: "0 0 1.5rem" }}>
+                One student claims the college and becomes its official Contingent Leader (CL). Your application is dispatched to the Executive Core for approval.
+              </p>
+
+              <form onSubmit={handleLeaderSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem", maxWidth: "680px" }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                    Select Invited College
+                  </label>
+                  <select
+                    value={formData.leaderCollege}
+                    onChange={(e) => setFormData({ ...formData, leaderCollege: e.target.value })}
+                    style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none", fontSize: "0.95rem" }}
+                    required
+                  >
+                    <option value="">-- Choose your university/college --</option>
+                    {INVITED_COLLEGES.map((col) => (
+                      <option key={col} value={col}>{col}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                      Leader Full Name
+                    </label>
                     <input
                       type="text"
-                      className="form-control"
                       placeholder="e.g. Parth Parmar"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       required
                     />
                   </div>
-
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Phone Number (+91)</label>
+                  <div>
+                    <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                      Official Phone
+                    </label>
                     <input
                       type="tel"
-                      className="form-control mono"
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 98207 73181"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       required
                     />
-                  </div>
-
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Email Address</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="leader@college.edu"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Create Account Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Enter a secure password"
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group" style={{ margin: 0, gridColumn: "span 2" }}>
-                    <label className="form-label">Invited College</label>
-                    <select
-                      className="form-control"
-                      value={formData.leaderCollege}
-                      onChange={(e) => setFormData({ ...formData, leaderCollege: e.target.value })}
-                      required
-                    >
-                      <option value="">-- Select Your Invited College --</option>
-                      {INVITED_COLLEGES.map((col) => (
-                        <option key={col} value={col}>
-                          {col}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="form-group" style={{ margin: 0, gridColumn: "span 2" }}>
-                    <label className="form-label">Official College ID Card Photo</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          collegeIdName: e.target.files?.[0]?.name || ""
-                        })
-                      }
-                    />
-                    <span style={{ fontSize: "0.75rem", color: "var(--dim)", marginTop: "0.25rem" }}>
-                      Upload a clear photo so the Executive Core can verify your student credentials.
-                    </span>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.5rem" }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                    Student Email Address
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="leader@college.edu.in"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
+                    required
+                  />
+                </div>
+
+                {/* Pink Banner Alert */}
+                <div
+                  style={{
+                    background: "#ff238f",
+                    color: "#ffffff",
+                    padding: "12px 16px",
+                    fontFamily: '"Anton", Impact, sans-serif',
+                    fontSize: "0.9rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    margin: "0.5rem 0"
+                  }}
+                >
+                  CL PRIVILEGE: LEADER CLAIMS THE CONTINGENT ROSTER AND COLLECTS SEALED BADGES
+                </div>
+
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem", margin: "0.5rem 0" }}>
                   <input
                     type="checkbox"
                     id="leaderRules"
                     checked={formData.leaderRules}
                     onChange={(e) => setFormData({ ...formData, leaderRules: e.target.checked })}
+                    style={{ width: "18px", height: "18px", marginTop: "2px" }}
                     required
                   />
-                  <label htmlFor="leaderRules" style={{ fontSize: "0.85rem", color: "var(--bone-dim)", cursor: "pointer" }}>
-                    I confirm I have read and agree to the official ILLENIUM 2026 Code of Conduct and fest regulations.
+                  <label htmlFor="leaderRules" style={{ fontSize: "0.85rem", color: "#333", lineHeight: 1.4, cursor: "pointer" }}>
+                    I agree to the ILLENIUM™ 2026 Code of Conduct, contingency points allocations, and representation rules.
                   </label>
                 </div>
 
-                <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end", marginTop: "1rem" }}>
-                  <button type="button" onClick={() => setMode("home")} className="btn btn-secondary">
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                    <span>Send for Approval</span>
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  style={{
+                    border: "none",
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "16px 24px",
+                    fontFamily: '"Anton", Impact, sans-serif',
+                    fontSize: "1.1rem",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    marginTop: "0.5rem"
+                  }}
+                >
+                  SUBMIT CL APPLICATION →
+                </button>
               </form>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* ========================================================================= */}
-        {/* VIEW 3: 7-STEP JOIN WIZARD                                                */}
-        {/* ========================================================================= */}
-        {mode === "join" && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          {/* PATHWAY 3: ON THE SPOT ENTRY (MATCHING IMAGE 1) */}
+          {mode === "on-the-spot" && (
+            <div>
               <button
-                onClick={() => {
-                  if (joinStep > 1) setJoinStep(joinStep - 1);
-                  else setMode("home");
-                }}
-                className="btn btn-ghost btn-sm"
-                style={{ gap: "0.4rem" }}
+                type="button"
+                onClick={() => setMode("home")}
+                style={{ background: "none", border: "none", color: "#070707", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "1.25rem" }}
               >
-                <ArrowLeft size={14} />
-                <span>{joinStep > 1 ? "Previous Step" : "Cancel"}</span>
+                ← BACK TO OPTIONS
               </button>
 
-              {/* Progress Indicator */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span className="mono" style={{ fontSize: "0.75rem", color: "var(--bone-dim)" }}>
-                  STEP {joinStep} OF 7
-                </span>
-                <div style={{ display: "flex", gap: "4px" }}>
+              <h1
+                style={{
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "clamp(3rem, 7vw, 5.5rem)",
+                  lineHeight: 0.88,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.03em",
+                  margin: "0 0 1rem",
+                  color: "#070707"
+                }}
+              >
+                ENTER<br />
+                ON THE<br />
+                <span style={{ color: "#ff238f" }}>DAY.</span>
+              </h1>
+
+              <p style={{ fontSize: "1.05rem", color: "#4c4a45", lineHeight: 1.5, maxWidth: "720px", margin: "0 0 1.25rem" }}>
+                On-the-spot entry is available only on festival days and only for events that allow it. No pre-set characters or prompts.
+              </p>
+
+              {/* Exact Pink Banner from Screenshot */}
+              <div
+                style={{
+                  background: "#ff238f",
+                  color: "#ffffff",
+                  padding: "14px 18px",
+                  fontFamily: '"Anton", Impact, sans-serif',
+                  fontSize: "1.05rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                  margin: "1.25rem 0 2rem"
+                }}
+              >
+                WHEN THE FESTIVAL IS CLOSED, THIS FORM STAYS CLOSED.
+              </div>
+
+              <form onSubmit={handleSpotSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                <div>
+                  <h2 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.8rem", textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    EVENTS OPEN TO ON-THE-SPOT
+                  </h2>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", borderTop: "1.5px solid #111", borderBottom: "1.5px solid #111", padding: "1.25rem 0" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <input
+                        type="checkbox"
+                        id="spot-stalls"
+                        checked={formData.spotEvents.includes("e-12")}
+                        onChange={() => toggleSpotEvent("e-12")}
+                        style={{ width: "22px", height: "22px" }}
+                      />
+                      <label htmlFor="spot-stalls" style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", margin: 0, cursor: "pointer" }}>
+                        STALLS &amp; INFORMALS <span style={{ fontSize: "0.85rem", color: "#666", fontFamily: "Arial, sans-serif" }}>18:30 &middot; QUAD</span>
+                      </label>
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <input
+                        type="checkbox"
+                        id="spot-teq"
+                        checked={formData.spotEvents.includes("e-02")}
+                        onChange={() => toggleSpotEvent("e-02")}
+                        style={{ width: "22px", height: "22px" }}
+                      />
+                      <label htmlFor="spot-teq" style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", margin: 0, cursor: "pointer" }}>
+                        TEQBALL THUNDER <span style={{ fontSize: "0.85rem", color: "#666", fontFamily: "Arial, sans-serif" }}>11:00 &middot; ATRIUM</span>
+                      </label>
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <input
+                        type="checkbox"
+                        id="spot-mono"
+                        checked={formData.spotEvents.includes("e-06")}
+                        onChange={() => toggleSpotEvent("e-06")}
+                        style={{ width: "22px", height: "22px" }}
+                      />
+                      <label htmlFor="spot-mono" style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", margin: 0, cursor: "pointer" }}>
+                        MONOCHROMATIC MASTERY <span style={{ fontSize: "0.85rem", color: "#666", fontFamily: "Arial, sans-serif" }}>09:30 &middot; STUDIO ONE</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter full name"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", marginBottom: "0.4rem" }}>
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="+91 98207 73181"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    border: "none",
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "16px 24px",
+                    fontFamily: '"Anton", Impact, sans-serif',
+                    fontSize: "1.1rem",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    maxWidth: "300px"
+                  }}
+                >
+                  GET ON-THE-SPOT PASS →
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* PATHWAY 4: 7-STEP JOIN CONTINGENT WIZARD */}
+          {mode === "join" && (
+            <div>
+              {/* Progress Steps */}
+              <div style={{ marginBottom: "2rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                    STEP {joinStep} OF 7 &middot;{" "}
+                    {joinStep === 1 && "CODE VALIDATION"}
+                    {joinStep === 2 && "YOUR DETAILS"}
+                    {joinStep === 3 && "PARTICIPATION TYPE"}
+                    {joinStep === 4 && "DOCUMENT UPLOADS"}
+                    {joinStep === 5 && "EVENT SELECTION"}
+                    {joinStep === 6 && "EMERGENCY CONTACT"}
+                    {joinStep === 7 && "REVIEW & DECLARATION"}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setMode("home")}
+                    style={{ background: "none", border: "none", color: "#8d8a82", fontFamily: '"Anton", Impact, sans-serif', fontSize: "0.85rem", cursor: "pointer" }}
+                  >
+                    CANCEL
+                  </button>
+                </div>
+
+                <div style={{ display: "flex", gap: "6px" }}>
                   {[1, 2, 3, 4, 5, 6, 7].map((s) => (
                     <div
                       key={s}
                       style={{
-                        width: "18px",
-                        height: "4px",
-                        borderRadius: "2px",
-                        background:
-                          s < joinStep
-                            ? "var(--acid)"
-                            : s === joinStep
-                            ? "#fff"
-                            : "rgba(255, 255, 255, 0.15)"
+                        height: "6px",
+                        flex: 1,
+                        background: s < joinStep ? "#070707" : s === joinStep ? "#ff238f" : "#d0cdc4",
+                        transition: "background 0.2s ease"
                       }}
                     />
                   ))}
                 </div>
               </div>
-            </div>
 
-            <div className="card">
-              {/* STEP 1: CONTINGENCY CODE */}
+              {/* STEP 1: CODE VALIDATION */}
               {joinStep === 1 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 1 · College Validation
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Enter Contingency Code</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    Your code connects you directly to your college team roster. Ask your Contingency Leader if you haven't received one yet.
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.8rem, 6vw, 4.8rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    ENTER YOUR <span style={{ color: "#ff238f" }}>CODE.</span>
+                  </h1>
+                  <p style={{ fontSize: "1rem", color: "#4c4a45", lineHeight: 1.5, margin: "0 0 1.5rem" }}>
+                    Enter the contingency code supplied by your college Contingent Leader (or use test code: <strong>ILLENIUM26</strong>).
                   </p>
 
-                  <div className="form-group" style={{ maxWidth: "480px" }}>
-                    <label className="form-label">Contingency Code</label>
+                  <div style={{ maxWidth: "550px" }}>
                     <input
                       type="text"
-                      className="form-control mono"
                       placeholder="e.g. ILLENIUM26 or ATL26-7KQ"
                       value={formData.code}
-                      onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                      style={{ fontSize: "1.2rem", fontWeight: 700, letterSpacing: "0.05em" }}
-                      autoFocus
+                      onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                      style={{ width: "100%", height: "60px", border: "2px solid #070707", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.4rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0 16px", outline: "none", marginBottom: "1rem" }}
                     />
-                    <span style={{ fontSize: "0.75rem", color: "var(--acid)", marginTop: "0.35rem" }}>
-                      Active Demo Codes: <b>ILLENIUM26</b> or <b>ATL26-7KQ</b>
-                    </span>
-                  </div>
 
-                  {formData.codeConfirmed && (
-                    <div
+                    {formData.codeConfirmed && (
+                      <div style={{ padding: "1rem 1.25rem", background: "#ffd8e9", border: "1px solid #ff238f", color: "#070707", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <CheckCircle2 size={18} style={{ color: "#ff238f" }} />
+                        <span style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase" }}>
+                          VERIFIED: {formData.collegeName}
+                        </span>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(2)}
+                      disabled={!formData.code}
                       style={{
-                        padding: "1rem 1.25rem",
-                        borderRadius: "var(--radius-sm)",
-                        background: "rgba(216, 255, 46, 0.08)",
-                        border: "1px solid rgba(216, 255, 46, 0.3)",
-                        marginTop: "1.25rem",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
+                        border: "none",
+                        background: "#070707",
+                        color: "#ffffff",
+                        padding: "16px 28px",
+                        fontFamily: '"Anton", Impact, sans-serif',
+                        fontSize: "1.1rem",
+                        textTransform: "uppercase",
+                        cursor: "pointer"
                       }}
                     >
-                      <div>
-                        <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--acid)" }}>
-                          College Verified
-                        </div>
-                        <div style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--bone)" }}>
-                          {formData.collegeName}
-                        </div>
-                      </div>
-                      <span className="badge badge-success">Valid Code</span>
-                    </div>
-                  )}
-
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button
-                      onClick={() => setJoinStep(2)}
-                      className="btn btn-primary"
-                      style={{ gap: "0.4rem" }}
-                    >
-                      <span>Continue to Details</span>
-                      <ArrowRight size={14} />
+                      CONTINUE TO DETAILS →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 2: PERSONAL DETAILS */}
+              {/* STEP 2: DETAILS */}
               {joinStep === 2 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 2 · Personal Profile
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Your Identity Details</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    We use your email and phone to bind your digital ILLENIUM ID passport and credentials.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    YOUR <span style={{ color: "#ff238f" }}>DETAILS.</span>
+                  </h1>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Full Name</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", maxWidth: "680px" }}>
+                    <div>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Full Name</label>
                       <input
                         type="text"
-                        className="form-control"
-                        placeholder="e.g. Swarnim Jambhrunkar"
+                        placeholder="Parth Parmar"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        required
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
-
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Phone Number (+91)</label>
+                    <div>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Phone Number</label>
                       <input
                         type="tel"
-                        className="form-control mono"
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 98207 73181"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
-
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Email Address</label>
+                    <div style={{ gridColumn: "span 2" }}>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Student Email</label>
                       <input
                         type="email"
-                        className="form-control"
-                        placeholder="you@example.com"
+                        placeholder="parth@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
-
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Account Password</label>
+                    <div style={{ gridColumn: "span 2" }}>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Passport Password</label>
                       <input
                         type="password"
-                        className="form-control"
                         placeholder="Create a password"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        required
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button onClick={() => setJoinStep(3)} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Next: Participation Type</span>
-                      <ArrowRight size={14} />
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(1)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(3)}
+                      style={{ border: "none", background: "#070707", color: "#ffffff", padding: "14px 28px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      CHOOSE PARTICIPATION TYPE →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 3: PARTICIPATION TYPE */}
+              {/* STEP 3: PARTICIPATION CATEGORY */}
               {joinStep === 3 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 3 · Representation Role
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>How Are You Taking Part?</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    Select your participation tier. If unsure, check with your Contingency Leader.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    PARTICIPATION <span style={{ color: "#ff238f" }}>TYPE.</span>
+                  </h1>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem", maxWidth: "720px", margin: "1.5rem 0" }}>
+                    {/* Card CC */}
                     <div
                       onClick={() => setFormData({ ...formData, joinType: "CC" })}
-                      className={`card card-interactive ${formData.joinType === "CC" ? "podium-gold" : ""}`}
                       style={{
+                        border: "2px solid #151515",
+                        padding: "1.75rem",
+                        background: formData.joinType === "CC" ? "#ff238f" : "transparent",
+                        color: formData.joinType === "CC" ? "#ffffff" : "#070707",
                         cursor: "pointer",
-                        borderWidth: formData.joinType === "CC" ? "2px" : "1px",
-                        borderColor: formData.joinType === "CC" ? "var(--acid)" : "var(--line)"
+                        transition: "all 0.15s ease"
                       }}
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                        <span className="mono" style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--acid)" }}>
-                          CC
-                        </span>
-                        {formData.joinType === "CC" && <CheckCircle2 size={18} style={{ color: "var(--acid)" }} />}
-                      </div>
-                      <h4 style={{ fontSize: "1.1rem", fontWeight: 700 }}>Competes for College</h4>
-                      <p style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-                        Competes directly in scoring events and earns points toward the championship tally.
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.1rem" }}>CC / 01</span>
+                      <strong style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', fontSize: "2rem", margin: "0.5rem 0" }}>
+                        CONTINGENT CONTENDER
+                      </strong>
+                      <p style={{ fontSize: "0.85rem", lineHeight: 1.4, margin: 0 }}>
+                        You compete for official points toward your college&apos;s festival championship tally.
                       </p>
                     </div>
 
+                    {/* Card PRNC */}
                     <div
                       onClick={() => setFormData({ ...formData, joinType: "PRNC" })}
-                      className={`card card-interactive ${formData.joinType === "PRNC" ? "podium-gold" : ""}`}
                       style={{
+                        border: "2px solid #151515",
+                        padding: "1.75rem",
+                        background: formData.joinType === "PRNC" ? "#ff238f" : "transparent",
+                        color: formData.joinType === "PRNC" ? "#ffffff" : "#070707",
                         cursor: "pointer",
-                        borderWidth: formData.joinType === "PRNC" ? "2px" : "1px",
-                        borderColor: formData.joinType === "PRNC" ? "var(--acid)" : "var(--line)"
+                        transition: "all 0.15s ease"
                       }}
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                        <span className="mono" style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--cyan)" }}>
-                          PRNC
-                        </span>
-                        {formData.joinType === "PRNC" && <CheckCircle2 size={18} style={{ color: "var(--cyan)" }} />}
-                      </div>
-                      <h4 style={{ fontSize: "1.1rem", fontWeight: 700 }}>Takes Part (Non-Scoring)</h4>
-                      <p style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-                        Takes part in festival proceedings for the college with non-competing point treatment.
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.1rem" }}>PRNC / 02</span>
+                      <strong style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', fontSize: "2rem", margin: "0.5rem 0" }}>
+                        NON-COMPETING
+                      </strong>
+                      <p style={{ fontSize: "0.85rem", lineHeight: 1.4, margin: 0 }}>
+                        Participate in workshops, open informals, and exhibitions with individual certification.
                       </p>
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button onClick={() => setJoinStep(4)} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Next: Verification Documents</span>
-                      <ArrowRight size={14} />
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(2)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(4)}
+                      style={{ border: "none", background: "#070707", color: "#ffffff", padding: "14px 28px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      UPLOAD DOCUMENTS →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 4: DOCUMENTS UPLOAD */}
+              {/* STEP 4: DOCUMENTS */}
               {joinStep === 4 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 4 · Verification Credentials
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Profile Photo & IDs</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    Used solely for desk accreditation and physical wristband issuance. Files are stored securely.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    DOCUMENT <span style={{ color: "#ff238f" }}>UPLOADS.</span>
+                  </h1>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Profile Photo (Headshot)</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem", maxWidth: "760px", margin: "1.5rem 0" }}>
+                    <div style={{ border: "2px dashed #222", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "150px" }}>
+                      <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.4rem", textTransform: "uppercase" }}>COLLEGE STUDENT ID</div>
                       <input
                         type="file"
-                        className="form-control"
-                        onChange={(e) =>
-                          setFormData({ ...formData, profilePhotoName: e.target.files?.[0]?.name || "" })
-                        }
+                        onChange={(e) => setFormData({ ...formData, collegeIdName: e.target.files?.[0]?.name || "student_id.pdf" })}
+                        style={{ marginTop: "1rem", height: "auto" }}
                       />
-                      <span style={{ fontSize: "0.75rem", color: "var(--dim)", marginTop: "0.2rem" }}>
-                        Clear face on plain background.
-                      </span>
                     </div>
 
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">College ID Card</label>
+                    <div style={{ border: "2px dashed #222", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "150px" }}>
+                      <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.4rem", textTransform: "uppercase" }}>GOVERNMENT PHOTO ID</div>
                       <input
                         type="file"
-                        className="form-control"
-                        onChange={(e) =>
-                          setFormData({ ...formData, collegeIdName: e.target.files?.[0]?.name || "" })
-                        }
-                      />
-                      <span style={{ fontSize: "0.75rem", color: "var(--dim)", marginTop: "0.2rem" }}>
-                        Photo or scan of physical college ID.
-                      </span>
-                    </div>
-
-                    <div className="form-group" style={{ margin: 0, gridColumn: "span 2" }}>
-                      <label className="form-label">Government ID (Aadhaar / Passport / Driving Licence)</label>
-                      <input
-                        type="file"
-                        className="form-control"
-                        onChange={(e) =>
-                          setFormData({ ...formData, govIdName: e.target.files?.[0]?.name || "" })
-                        }
+                        onChange={(e) => setFormData({ ...formData, govIdName: e.target.files?.[0]?.name || "gov_id.pdf" })}
+                        style={{ marginTop: "1rem", height: "auto" }}
                       />
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button onClick={() => setJoinStep(5)} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Next: Choose Events</span>
-                      <ArrowRight size={14} />
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(3)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(5)}
+                      style={{ border: "none", background: "#070707", color: "#ffffff", padding: "14px 28px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      SELECT EVENTS →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 5: CHOOSE EVENTS */}
+              {/* STEP 5: EVENT SELECTION */}
               {joinStep === 5 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 5 · Programme Selection
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Choose Your Events</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    Select the events you wish to enter. Your Contingency Leader can still modify entries prior to deadlines.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    SELECT <span style={{ color: "#ff238f" }}>EVENTS.</span>
+                  </h1>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "0.75rem" }}>
+                  <div style={{ borderTop: "1.5px solid #111", borderBottom: "1.5px solid #111", margin: "1.5rem 0", padding: "0.5rem 0" }}>
                     {FESTIVAL_EVENTS.map((ev) => {
                       const isSelected = formData.selectedEvents.includes(ev.id);
                       return (
                         <div
                           key={ev.id}
-                          onClick={() => toggleEvent(ev.id)}
                           style={{
-                            padding: "1rem",
-                            borderRadius: "var(--radius-sm)",
-                            background: isSelected ? "rgba(216, 255, 46, 0.08)" : "var(--bg-surface)",
-                            border: isSelected ? "1px solid var(--acid)" : "1px solid var(--line)",
-                            cursor: "pointer",
-                            display: "flex",
-                            justifyContent: "space-between",
+                            display: "grid",
+                            gridTemplateColumns: "32px 1fr auto",
+                            gap: "12px",
                             alignItems: "center",
-                            transition: "all 0.15s ease"
+                            borderBottom: "1px solid rgba(7,7,7,0.14)",
+                            padding: "12px 0",
+                            background: isSelected ? "#ffd8e9" : "transparent"
                           }}
                         >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleEvent(ev.id)}
+                            style={{ width: "20px", height: "20px" }}
+                          />
                           <div>
-                            <div style={{ fontWeight: 700, fontSize: "0.95rem", color: isSelected ? "var(--acid)" : "var(--bone)" }}>
-                              {ev.name}
-                            </div>
-                            <div style={{ fontSize: "0.75rem", color: "var(--dim)", marginTop: "0.15rem" }}>
-                              {ev.category} · {ev.time}
-                            </div>
+                            <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.25rem", textTransform: "uppercase" }}>{ev.name}</div>
+                            <span style={{ fontSize: "0.75rem", color: "#666" }}>{ev.category} &middot; {ev.time} &middot; {ev.venue}</span>
                           </div>
-                          <div
-                            style={{
-                              width: "20px",
-                              height: "20px",
-                              borderRadius: "4px",
-                              border: isSelected ? "none" : "1px solid var(--line-strong)",
-                              background: isSelected ? "var(--acid)" : "transparent",
-                              color: "var(--ink)",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center"
-                            }}
-                          >
-                            {isSelected && <CheckCircle2 size={14} />}
-                          </div>
+                          <span style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "0.85rem", color: isSelected ? "#ff238f" : "#999" }}>
+                            {isSelected ? "SELECTED" : "AVAILABLE"}
+                          </span>
                         </div>
                       );
                     })}
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button onClick={() => setJoinStep(6)} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Next: Emergency Contact</span>
-                      <ArrowRight size={14} />
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(4)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(6)}
+                      style={{ border: "none", background: "#070707", color: "#ffffff", padding: "14px 28px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      EMERGENCY CONTACT →
                     </button>
                   </div>
                 </div>
@@ -873,429 +1027,219 @@ export default function RegisterPage() {
               {/* STEP 6: EMERGENCY CONTACT */}
               {joinStep === 6 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 6 · Safety & Emergency
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Who Do We Call?</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    A designated emergency contact in case of an on-site medical incident.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    EMERGENCY <span style={{ color: "#ff238f" }}>CONTACT.</span>
+                  </h1>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Contact Full Name</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", maxWidth: "680px", margin: "1.5rem 0" }}>
+                    <div>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Contact Name</label>
                       <input
                         type="text"
-                        className="form-control"
-                        placeholder="e.g. Ramesh Parmar"
+                        placeholder="Parent / Guardian Name"
                         value={formData.emergencyName}
                         onChange={(e) => setFormData({ ...formData, emergencyName: e.target.value })}
-                        required
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
-
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label className="form-label">Contact Phone (+91)</label>
+                    <div>
+                      <label style={{ display: "block", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.85rem", marginBottom: "0.35rem" }}>Phone Number</label>
                       <input
                         type="tel"
-                        className="form-control mono"
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 98200 12345"
                         value={formData.emergencyPhone}
                         onChange={(e) => setFormData({ ...formData, emergencyPhone: e.target.value })}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group" style={{ margin: 0, gridColumn: "span 2" }}>
-                      <label className="form-label">Relationship (Optional)</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="e.g. Parent / Guardian / Faculty In-Charge"
-                        value={formData.emergencyRelation}
-                        onChange={(e) => setFormData({ ...formData, emergencyRelation: e.target.value })}
+                        style={{ width: "100%", height: "54px", border: "1.5px solid #161616", background: "transparent", padding: "0 14px", outline: "none" }}
                       />
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
-                    <button onClick={() => setJoinStep(7)} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Next: Review & Submit</span>
-                      <ArrowRight size={14} />
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(5)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(7)}
+                      style={{ border: "none", background: "#070707", color: "#ffffff", padding: "14px 28px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      REVIEW &amp; DECLARE →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 7: REVIEW & SUBMIT */}
+              {/* STEP 7: REVIEW & DECLARE */}
               {joinStep === 7 && (
                 <div>
-                  <span className="badge badge-acid" style={{ marginBottom: "0.5rem" }}>
-                    Step 7 · Final Verification
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Check Everything</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem", marginBottom: "1.5rem" }}>
-                    Please review your submission details. Click "Edit" next to any field if you need to make changes.
-                  </p>
+                  <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                    REVIEW &amp; <span style={{ color: "#ff238f" }}>CONFIRM.</span>
+                  </h1>
 
-                  <div className="data-table-container" style={{ marginBottom: "1.5rem" }}>
-                    <table className="data-table">
-                      <tbody>
-                        <tr>
-                          <td style={{ width: "160px", color: "var(--bone-dim)", fontWeight: 600 }}>Full Name</td>
-                          <td style={{ fontWeight: 700 }}>{formData.fullName || "—"}</td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(2)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ color: "var(--bone-dim)", fontWeight: 600 }}>College</td>
-                          <td style={{ fontWeight: 700 }}>{formData.collegeName || "Atlas SkillTech University"}</td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(1)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ color: "var(--bone-dim)", fontWeight: 600 }}>Phone / Email</td>
-                          <td>{formData.phone || "—"} · {formData.email || "—"}</td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(2)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ color: "var(--bone-dim)", fontWeight: 600 }}>Participation Tier</td>
-                          <td><span className="badge badge-acid">{formData.joinType}</span></td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(3)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ color: "var(--bone-dim)", fontWeight: 600 }}>Chosen Events</td>
-                          <td>
-                            {formData.selectedEvents.length
-                              ? formData.selectedEvents
-                                  .map((id) => FESTIVAL_EVENTS.find((e) => e.id === id)?.name)
-                                  .filter(Boolean)
-                                  .join(", ")
-                              : "None selected yet"}
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(5)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ color: "var(--bone-dim)", fontWeight: 600 }}>Emergency Contact</td>
-                          <td>{formData.emergencyName || "—"} ({formData.emergencyPhone || "—"})</td>
-                          <td style={{ textAlign: "right" }}>
-                            <button onClick={() => setJoinStep(6)} className="btn btn-ghost btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div style={{ borderTop: "2px solid #111", margin: "1.5rem 0" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: "1rem", padding: "14px 0", borderBottom: "1px solid rgba(7,7,7,0.18)" }}>
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase" }}>COLLEGE</span>
+                      <span>{formData.collegeName || "Atlas SkillTech University"}</span>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: "1rem", padding: "14px 0", borderBottom: "1px solid rgba(7,7,7,0.18)" }}>
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase" }}>PARTICIPANT</span>
+                      <span>{formData.fullName || "Parth Parmar"} ({formData.phone})</span>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: "1rem", padding: "14px 0", borderBottom: "1px solid rgba(7,7,7,0.18)" }}>
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase" }}>PARTICIPATION TYPE</span>
+                      <span>{formData.joinType === "CC" ? "Contingent Contender (Points Active)" : "Non-Competing Individual"}</span>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: "1rem", padding: "14px 0", borderBottom: "1px solid rgba(7,7,7,0.18)" }}>
+                      <span style={{ fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase" }}>EVENTS</span>
+                      <span>{formData.selectedEvents.length} Selected</span>
+                    </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem", margin: "1.5rem 0" }}>
                     <input
                       type="checkbox"
                       id="truth"
                       checked={formData.truthConfirmed}
                       onChange={(e) => setFormData({ ...formData, truthConfirmed: e.target.checked })}
+                      style={{ width: "20px", height: "20px", marginTop: "2px" }}
                       required
                     />
-                    <label htmlFor="truth" style={{ fontSize: "0.85rem", color: "var(--bone)", cursor: "pointer" }}>
-                      I certify that all details submitted above are authentic and accurate.
+                    <label htmlFor="truth" style={{ fontSize: "0.85rem", color: "#333", lineHeight: 1.4, cursor: "pointer" }}>
+                      I solemnly affirm that the submitted documents and college identity belong to me and adhere to all ILLENIUM™ regulations.
                     </label>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem" }}>
-                    <button onClick={() => setJoinStep(6)} className="btn btn-secondary">
-                      Back
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setJoinStep(6)}
+                      style={{ border: "1.5px solid #070707", background: "transparent", color: "#070707", padding: "14px 22px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      ← BACK
                     </button>
-                    <button onClick={handleJoinSubmit} className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                      <span>Submit Registration</span>
-                      <ArrowRight size={14} />
+                    <button
+                      type="button"
+                      onClick={handleJoinSubmit}
+                      style={{ border: "none", background: "#ff238f", color: "#ffffff", padding: "14px 32px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.1rem", textTransform: "uppercase", cursor: "pointer" }}
+                    >
+                      COMPLETE REGISTRATION →
                     </button>
                   </div>
                 </div>
               )}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* ========================================================================= */}
-        {/* VIEW 4: ON THE SPOT FESTIVAL ENTRY                                        */}
-        {/* ========================================================================= */}
-        {mode === "on-the-spot" && (
-          <div>
-            <button
-              onClick={() => setMode("home")}
-              className="btn btn-ghost btn-sm"
-              style={{ marginBottom: "1.5rem", gap: "0.4rem" }}
-            >
-              <ArrowLeft size={14} />
-              <span>Back to Pathways</span>
-            </button>
-
-            <div className="card">
-              <div className="card-header">
-                <div>
-                  <span className="badge badge-neutral" style={{ marginBottom: "0.5rem" }}>
-                    On The Spot Registration
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Enter On Festival Days</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-                    Available on festival days for individual and informal events allowing on-the-spot entry (OD).
-                  </p>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: "1.5rem" }}>
-                <h4 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "0.75rem" }}>
-                  Events Open for On-the-Spot Entry
-                </h4>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "0.5rem" }}>
-                  {FESTIVAL_EVENTS.filter((e) => e.types.includes("OD")).map((ev) => (
-                    <div
-                      key={ev.id}
-                      style={{
-                        padding: "0.75rem 1rem",
-                        borderRadius: "var(--radius-sm)",
-                        background: "var(--bg-surface)",
-                        border: "1px solid var(--line)",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                      }}
-                    >
-                      <div>
-                        <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{ev.name}</span>
-                        <div style={{ fontSize: "0.75rem", color: "var(--dim)" }}>{ev.time} · {ev.venue}</div>
-                      </div>
-                      <span className="badge badge-acid" style={{ fontSize: "0.65rem" }}>OD Open</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  showToast("On-the-Spot Details Sent to Accreditation Desk");
-                  setMode("done");
-                }}
-                style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          {/* PATHWAY 5: STATUS TRACKER */}
+          {mode === "status" && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMode("home")}
+                style={{ background: "none", border: "none", color: "#070707", fontFamily: '"Anton", Impact, sans-serif', textTransform: "uppercase", fontSize: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "1.25rem" }}
               >
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Full Name</label>
-                    <input type="text" className="form-control" placeholder="Your name" required />
-                  </div>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Phone (+91)</label>
-                    <input type="tel" className="form-control mono" placeholder="+91 98765 43210" required />
-                  </div>
-                </div>
+                ← BACK TO OPTIONS
+              </button>
 
-                <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "1rem" }}>
-                  <button type="button" onClick={() => setMode("home")} className="btn btn-secondary">
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                    <span>Submit & Proceed to Desk</span>
-                    <ArrowRight size={14} />
-                  </button>
+              <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(2.8rem, 6vw, 5rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem", color: "#070707" }}>
+                CONTINGENT <span style={{ color: "#ff238f" }}>STATUS.</span>
+              </h1>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "2px solid #111", borderBottom: "2px solid #111", margin: "2rem 0" }}>
+                <div style={{ padding: "1.5rem 1rem", borderRight: "1px solid rgba(7,7,7,0.18)" }}>
+                  <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#ff238f", marginBottom: "0.75rem" }} />
+                  <strong style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", display: "block" }}>1. APPLICATION SENT</strong>
+                  <p style={{ fontSize: "0.8rem", color: "#666", margin: "0.3rem 0 0" }}>Dispatched to Central OC &amp; Executive Core</p>
                 </div>
-              </form>
+                <div style={{ padding: "1.5rem 1rem", borderRight: "1px solid rgba(7,7,7,0.18)" }}>
+                  <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#ff238f", marginBottom: "0.75rem" }} />
+                  <strong style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", display: "block" }}>2. IDENTITY REVIEW</strong>
+                  <p style={{ fontSize: "0.8rem", color: "#666", margin: "0.3rem 0 0" }}>Student credentials verified against university list</p>
+                </div>
+                <div style={{ padding: "1.5rem 1rem" }}>
+                  <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#ff238f", marginBottom: "0.75rem" }} />
+                  <strong style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "1.35rem", textTransform: "uppercase", display: "block" }}>3. CODE GENERATED</strong>
+                  <p style={{ fontSize: "0.8rem", color: "#666", margin: "0.3rem 0 0" }}>Contingency code active for college roster</p>
+                </div>
+              </div>
+
+              {/* Code Box */}
+              <div style={{ background: "#070707", color: "#ffffff", padding: "1.75rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+                <div>
+                  <span style={{ fontSize: "0.75rem", fontFamily: '"Anton", Impact, sans-serif', letterSpacing: "0.06em", color: "#8d8a82" }}>ISSUED CONTINGENCY CODE</span>
+                  <div style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "2.8rem", letterSpacing: "0.08em", color: "#ff238f" }}>ILLENIUM26</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText("ILLENIUM26");
+                    showToast("Contingency Code Copied!");
+                  }}
+                  style={{ background: "#ff238f", border: "none", color: "#ffffff", padding: "12px 18px", fontFamily: '"Anton", Impact, sans-serif', fontSize: "0.95rem", textTransform: "uppercase", cursor: "pointer" }}
+                >
+                  COPY CODE
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* ========================================================================= */}
-        {/* VIEW 5: LEADER APPROVAL STATUS & CODE RELEASE                             */}
-        {/* ========================================================================= */}
-        {mode === "status" && (
-          <div>
-            <button
-              onClick={() => setMode("home")}
-              className="btn btn-ghost btn-sm"
-              style={{ marginBottom: "1.5rem", gap: "0.4rem" }}
-            >
-              <ArrowLeft size={14} />
-              <span>Back to Home</span>
-            </button>
-
-            <div className="card">
-              <div className="card-header">
-                <div>
-                  <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>
-                    Status Tracker
-                  </span>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700 }}>
-                    {formData.leaderStatus === "approved" ? "You're Approved." : "Request Received."}
-                  </h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--bone-dim)", marginTop: "0.25rem" }}>
-                    {formData.leaderStatus === "approved"
-                      ? "Your college has been verified. Your unique contingency code is ready below."
-                      : "Your application is currently being verified by the Executive Core."}
-                  </p>
-                </div>
+          {/* PATHWAY 6: CONFIRMATION DONE */}
+          {mode === "done" && (
+            <div style={{ textAlign: "center", padding: "2rem 0" }}>
+              <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#ff238f", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem" }}>
+                <CheckCircle2 size={36} />
               </div>
 
-              {/* 3-Step Status Tracker */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: "0.75rem",
-                  margin: "1.5rem 0",
-                  padding: "1.25rem",
-                  background: "var(--bg-surface)",
-                  borderRadius: "var(--radius-sm)",
-                  border: "1px solid var(--line)"
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                  <CheckCircle2 size={20} style={{ color: "var(--acid)" }} />
-                  <div>
-                    <strong style={{ fontSize: "0.9rem" }}>1. Sent</strong>
-                    <p style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Request received</p>
-                  </div>
-                </div>
+              <h1 style={{ fontFamily: '"Anton", Impact, sans-serif', fontSize: "clamp(3rem, 7vw, 5rem)", lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 1rem" }}>
+                REGISTRATION<br /><span style={{ color: "#ff238f" }}>COMPLETED.</span>
+              </h1>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                  <Clock
-                    size={20}
-                    style={{
-                      color: formData.leaderStatus === "approved" ? "var(--acid)" : "var(--gold)"
-                    }}
-                  />
-                  <div>
-                    <strong style={{ fontSize: "0.9rem" }}>2. Under Review</strong>
-                    <p style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Executive Core review</p>
-                  </div>
-                </div>
+              <p style={{ fontSize: "1.1rem", color: "#4c4a45", maxWidth: "600px", margin: "0 auto 2rem", lineHeight: 1.5 }}>
+                Your participant pass has been recorded in the ILLENIUM™ 2026 database. Sign in to your passport portal to view your QR badge.
+              </p>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                  <ShieldCheck
-                    size={20}
-                    style={{
-                      color: formData.leaderStatus === "approved" ? "var(--acid)" : "var(--dim)"
-                    }}
-                  />
-                  <div>
-                    <strong style={{ fontSize: "0.9rem" }}>3. Approved</strong>
-                    <p style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Code released</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Code Box if Approved */}
-              {formData.leaderStatus === "approved" && (
-                <div
+              <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+                <Link
+                  href="/auth/login"
                   style={{
-                    padding: "1.5rem",
-                    borderRadius: "var(--radius-md)",
-                    background: "rgba(216, 255, 46, 0.08)",
-                    border: "1px solid rgba(216, 255, 46, 0.4)",
-                    marginBottom: "1.5rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
+                    border: "none",
+                    background: "#070707",
+                    color: "#ffffff",
+                    padding: "16px 28px",
+                    fontFamily: '"Anton", Impact, sans-serif',
+                    fontSize: "1.1rem",
+                    textTransform: "uppercase",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem"
                   }}
                 >
-                  <div>
-                    <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--acid)", fontWeight: 700 }}>
-                      Official Contingency Code
-                    </div>
-                    <div className="mono" style={{ fontSize: "2rem", fontWeight: 800, color: "var(--bone)", letterSpacing: "0.08em" }}>
-                      ATL26-7KQ
-                    </div>
-                    <div style={{ fontSize: "0.8rem", color: "var(--bone-dim)", marginTop: "0.2rem" }}>
-                      Atlas SkillTech University · Allocation Active
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      navigator.clipboard?.writeText("ATL26-7KQ");
-                      showToast("Contingency Code Copied!");
-                    }}
-                    className="btn btn-primary"
-                    style={{ gap: "0.4rem" }}
-                  >
-                    <Copy size={15} />
-                    <span>Copy Code</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Demo State Switcher */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", margin: "1rem 0" }}>
-                <span style={{ fontSize: "0.75rem", color: "var(--dim)" }}>Demo Simulation:</span>
-                <button
-                  onClick={() => setFormData({ ...formData, leaderStatus: "approved" })}
-                  className="btn btn-ghost btn-sm"
-                  style={{ fontSize: "0.75rem", color: "var(--acid)" }}
+                  <span>SIGN IN TO PORTAL</span>
+                  <ArrowRight size={16} />
+                </Link>
+                <Link
+                  href="/events"
+                  style={{
+                    border: "1.5px solid #070707",
+                    background: "transparent",
+                    color: "#070707",
+                    padding: "16px 28px",
+                    fontFamily: '"Anton", Impact, sans-serif',
+                    fontSize: "1.1rem",
+                    textTransform: "uppercase"
+                  }}
                 >
-                  Simulate Approved
-                </button>
-                <button
-                  onClick={() => setFormData({ ...formData, leaderStatus: "review" })}
-                  className="btn btn-ghost btn-sm"
-                  style={{ fontSize: "0.75rem" }}
-                >
-                  Simulate Under Review
-                </button>
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "1rem" }}>
-                <Link href="/admin/contingents" className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                  <span>Contingency Leader Portal</span>
-                  <ExternalLink size={14} />
+                  BROWSE 22 EVENTS
                 </Link>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* VIEW 6: CONFIRMATION / QUEUE SUBMISSION SUCCESS                           */}
-        {/* ========================================================================= */}
-        {mode === "done" && (
-          <div className="card" style={{ textAlign: "center", padding: "3rem 2rem" }}>
-            <div
-              style={{
-                width: "54px",
-                height: "54px",
-                borderRadius: "50%",
-                background: "rgba(216, 255, 46, 0.15)",
-                color: "var(--acid)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 1.5rem"
-              }}
-            >
-              <CheckCircle2 size={32} />
-            </div>
-
-            <h1 style={{ fontSize: "2.25rem", fontWeight: 700 }}>You're in the Queue!</h1>
-            <p style={{ maxWidth: "560px", margin: "0.5rem auto 2rem", fontSize: "0.95rem", color: "var(--bone-dim)" }}>
-              Your details have been registered. Your Contingency Leader and the Accreditation Desk will review and issue your digital ILLENIUM ID passport and physical RFID wristband.
-            </p>
-
-            <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
-              <Link href="/participant/dashboard" className="btn btn-primary" style={{ gap: "0.4rem" }}>
-                <span>Go to My Passport Dashboard</span>
-                <ArrowRight size={14} />
-              </Link>
-              <Link href="/" className="btn btn-secondary">
-                Festival Landing
-              </Link>
-            </div>
-          </div>
-        )}
-      </main>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
