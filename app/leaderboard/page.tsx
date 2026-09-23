@@ -37,7 +37,7 @@ export default function LeaderboardPage() {
     <div style={{ minHeight: "100vh", background: "var(--bg-base)", display: "flex", flexDirection: "column" }}>
       <UnifiedHeader />
 
-      <main style={{ maxWidth: "1280px", margin: "0 auto", width: "100%", padding: "2.5rem 1.5rem", flex: 1 }}>
+      <main style={{ maxWidth: "1280px", margin: "0 auto", width: "100%", padding: "1.5rem clamp(0.85rem, 3vw, 1.5rem) 4rem", flex: 1 }}>
         {/* Page Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1.5rem" }}>
           <div>
@@ -61,7 +61,7 @@ export default function LeaderboardPage() {
               <Trophy size={13} />
               Championship Standings
             </div>
-            <h1 style={{ fontSize: "2.5rem", fontWeight: 700, letterSpacing: "-0.03em" }}>
+            <h1 style={{ fontSize: "clamp(1.8rem, 5vw, 2.5rem)", fontWeight: 700, letterSpacing: "-0.03em" }}>
               Official Festival Leaderboard
             </h1>
             <p style={{ marginTop: "0.4rem", maxWidth: "680px", fontSize: "0.95rem" }}>
@@ -69,7 +69,7 @@ export default function LeaderboardPage() {
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
             <Link href="/admin/scoring" className="btn btn-secondary btn-sm" style={{ gap: "0.4rem" }}>
               <Shield size={14} />
               <span>Scoring Engine</span>
@@ -86,7 +86,7 @@ export default function LeaderboardPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(270px, 100%), 1fr))",
               gap: "1.25rem",
               marginBottom: "2.5rem"
             }}

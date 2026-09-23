@@ -93,14 +93,64 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
       {/* Top Universal Header */}
       <UnifiedHeader />
 
-      <div style={{ display: "flex", flex: 1 }}>
-        {/* Desktop & Mobile Sidebar */}
+      {/* Mobile Role Sub-header (only visible on mobile screens) */}
+      <div
+        className="role-shell-mobile-top"
+        style={{
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0.6rem 1rem",
+          background: "rgba(14, 13, 20, 0.96)",
+          borderBottom: "1px solid var(--line)",
+          backdropFilter: "blur(12px)",
+          position: "sticky",
+          top: "53px",
+          zIndex: 700
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div
+            style={{
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              background: "#ff238f",
+              boxShadow: "0 0 8px #ff238f"
+            }}
+          />
+          <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--bone)" }}>
+            {config.label}
+          </span>
+          <span style={{ fontSize: "0.7rem", color: "var(--bone-dim)" }}>
+            &middot; {config.title}
+          </span>
+        </div>
+
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="btn btn-secondary btn-sm"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            padding: "0.35rem 0.65rem",
+            fontSize: "0.75rem"
+          }}
+          aria-label="Open mobile desk navigation"
+        >
+          <Menu size={14} style={{ color: "#ff238f" }} />
+          <span>All Pages</span>
+        </button>
+      </div>
+
+      <div style={{ display: "flex", flex: 1, position: "relative" }}>
+        {/* Desktop Sidebar (hidden on mobile via CSS) */}
         <aside
+          className="role-shell-sidebar"
           style={{
             width: "260px",
             background: "var(--bg-surface)",
             borderRight: "1px solid var(--line)",
-            display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             padding: "1.5rem 1rem",
@@ -126,8 +176,8 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: role === "admin" ? "#ff238f" : role === "judge" ? "#ff238f" : "#ff238f",
-                  boxShadow: `0 0 8px ${role === "admin" ? "#ff238f" : role === "judge" ? "#ff238f" : "#ff238f"}`
+                  background: "#ff238f",
+                  boxShadow: "0 0 8px #ff238f"
                 }}
               />
               <div style={{ display: "flex", flexDirection: "column" }}>
@@ -162,18 +212,6 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
                       background: isSelected ? "var(--bg-surface-elevated)" : "transparent",
                       border: isSelected ? "1px solid var(--line-strong)" : "1px solid transparent",
                       transition: "all 0.15s ease"
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
-                        e.currentTarget.style.color = "var(--bone)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "var(--bone-dim)";
-                      }
                     }}
                   >
                     <IconComponent
@@ -220,6 +258,7 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
 
         {/* Main Workspace Viewport */}
         <main
+          className="role-shell-main"
           style={{
             flex: 1,
             padding: "2rem",
@@ -232,6 +271,229 @@ export function RoleShell({ role, children }: { role: Role; children: React.Reac
           {children}
         </main>
       </div>
+
+      {/* Mobile Slide-over Drawer Menu */}
+      {mobileMenuOpen && (
+        <div
+          className="scrim active"
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 900,
+            background: "rgba(0, 0, 0, 0.75)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            justifyContent: "flex-start"
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "min(320px, 85vw)",
+              height: "100%",
+              background: "var(--bg-surface)",
+              borderRight: "1px solid var(--line-strong)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              padding: "1.5rem 1.25rem",
+              animation: "fadeIn 0.2s ease"
+            }}
+          >
+            <div>
+              {/* Drawer Header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "1.5rem",
+                  paddingBottom: "1rem",
+                  borderBottom: "1px solid var(--line)"
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--bone)" }}>
+                    {config.label}
+                  </div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--bone-dim)" }}>
+                    {config.title}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn btn-ghost btn-sm"
+                  style={{ padding: "0.3rem" }}
+                  aria-label="Close menu"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Navigation Items */}
+              <nav style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                {config.nav.map((item) => {
+                  const IconComponent = item.icon;
+                  const isSelected = pathname === item.href || (item.href !== "/leaderboard" && item.href !== "/events" && pathname.startsWith(item.href));
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.75rem",
+                        padding: "0.75rem 0.9rem",
+                        borderRadius: "var(--radius-sm)",
+                        fontSize: "0.9rem",
+                        fontWeight: isSelected ? 600 : 500,
+                        color: isSelected ? "var(--bone)" : "var(--bone-dim)",
+                        background: isSelected ? "rgba(255, 35, 143, 0.15)" : "transparent",
+                        border: isSelected ? "1px solid rgba(255, 35, 143, 0.3)" : "1px solid transparent"
+                      }}
+                    >
+                      <IconComponent
+                        size={17}
+                        style={{
+                          color: isSelected ? "#ff238f" : "var(--bone-dim)"
+                        }}
+                      />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Drawer Bottom Controls */}
+            <div
+              style={{
+                paddingTop: "1rem",
+                borderTop: "1px solid var(--line)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem"
+              }}
+            >
+              <Link
+                href="/"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ justifyContent: "flex-start", gap: "0.6rem" }}
+              >
+                <ExternalLink size={15} />
+                <span>Public Landing</span>
+              </Link>
+              <button
+                onClick={signOut}
+                className="btn btn-ghost btn-sm"
+                style={{ justifyContent: "flex-start", gap: "0.6rem", color: "#ff238f" }}
+              >
+                <LogOut size={15} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Fixed Bottom Navigation Dock (only visible on mobile screens) */}
+      <nav
+        className="role-shell-bottom-dock"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "60px",
+          background: "rgba(12, 11, 18, 0.95)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          borderTop: "1px solid var(--line)",
+          zIndex: 750,
+          alignItems: "center",
+          justifyContent: "space-around",
+          padding: "0 0.5rem"
+        }}
+      >
+        {/* Render top 4 quick items from config.nav */}
+        {config.nav.slice(0, 4).map((item) => {
+          const IconComponent = item.icon;
+          const isSelected = pathname === item.href || (item.href !== "/leaderboard" && item.href !== "/events" && pathname.startsWith(item.href));
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.2rem",
+                flex: 1,
+                height: "100%",
+                textDecoration: "none",
+                color: isSelected ? "#ff238f" : "var(--bone-dim)",
+                transition: "color 0.15s ease",
+                position: "relative"
+              }}
+            >
+              <IconComponent size={18} style={{ color: isSelected ? "#ff238f" : "var(--bone-dim)" }} />
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  fontWeight: isSelected ? 700 : 500,
+                  letterSpacing: "-0.01em",
+                  maxWidth: "65px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                {item.label}
+              </span>
+              {isSelected && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "3px",
+                    width: "16px",
+                    height: "2px",
+                    background: "#ff238f",
+                    borderRadius: "999px"
+                  }}
+                />
+              )}
+            </Link>
+          );
+        })}
+
+        {/* 5th Button: More / Menu trigger */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.2rem",
+            flex: 1,
+            height: "100%",
+            background: "none",
+            border: "none",
+            color: mobileMenuOpen ? "#ff238f" : "var(--bone-dim)",
+            cursor: "pointer"
+          }}
+          aria-label="Toggle full navigation drawer"
+        >
+          <Menu size={18} style={{ color: mobileMenuOpen ? "#ff238f" : "var(--bone-dim)" }} />
+          <span style={{ fontSize: "0.65rem", fontWeight: 500 }}>More</span>
+        </button>
+      </nav>
     </div>
   );
 }

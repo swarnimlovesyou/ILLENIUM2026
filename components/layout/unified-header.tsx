@@ -248,10 +248,10 @@ export function UnifiedHeader() {
             </div>
           </div>
 
-          {/* Center: High-Frequency Links */}
+          {/* Center: High-Frequency Links (hidden on mobile/tablet) */}
           <nav
+            className="nav-desktop-only"
             style={{
-              display: "flex",
               alignItems: "center",
               gap: "0.25rem"
             }}
@@ -289,23 +289,25 @@ export function UnifiedHeader() {
           </nav>
 
           {/* Right: Master Portal & Role Command Palette Trigger */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <button
               onClick={() => setPaletteOpen(true)}
-              className="btn btn-secondary btn-sm"
+              className="btn btn-secondary btn-sm header-portals-btn"
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.45rem 0.85rem",
+                gap: "0.45rem",
+                padding: "0.45rem 0.75rem",
                 borderRadius: "var(--radius-sm)",
                 borderColor: "rgba(255, 35, 143, 0.3)",
                 background: "rgba(24, 22, 34, 0.9)"
               }}
+              title="Open Role Portals (Ctrl+K)"
             >
-              <Layers size={14} style={{ color: "#ff238f" }} />
-              <span style={{ fontWeight: 600 }}>Portals & Roles</span>
+              <Layers size={14} style={{ color: "#ff238f", flexShrink: 0 }} />
+              <span className="header-portals-label" style={{ fontWeight: 600 }}>Portals</span>
               <kbd
+                className="header-portals-kbd"
                 style={{
                   background: "rgba(255, 255, 255, 0.08)",
                   padding: "0.1rem 0.35rem",
@@ -320,7 +322,7 @@ export function UnifiedHeader() {
               </kbd>
             </button>
 
-            <Link href="/auth/login" className="btn btn-primary btn-sm">
+            <Link href="/auth/login" className="btn btn-primary btn-sm" style={{ padding: "0.45rem 0.75rem" }}>
               Sign In
             </Link>
           </div>
@@ -392,11 +394,11 @@ export function UnifiedHeader() {
             {/* Portal Directory Grid */}
             <div
               style={{
-                padding: "1.25rem 1.5rem",
-                maxHeight: "65vh",
+                padding: "1rem clamp(0.75rem, 3vw, 1.5rem)",
+                maxHeight: "70vh",
                 overflowY: "auto",
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))",
                 gap: "0.75rem"
               }}
             >

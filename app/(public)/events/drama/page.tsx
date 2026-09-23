@@ -74,9 +74,9 @@ export default function DramaEventPage() {
       <PublicNav />
 
       {/* Main Content Container */}
-      <main style={{ flex: 1, maxWidth: "1240px", margin: "0 auto", padding: "2rem 1.5rem 5rem", width: "100%" }}>
+      <main style={{ flex: 1, maxWidth: "1240px", margin: "0 auto", padding: "1.5rem clamp(0.85rem, 3vw, 1.5rem) 4rem", width: "100%" }}>
         {/* Navigation Breadcrumb */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem", flexWrap: "wrap" }}>
           <Link
             href="/events"
             className="btn btn-secondary btn-sm"
@@ -101,7 +101,7 @@ export default function DramaEventPage() {
             position: "relative",
             borderRadius: "var(--radius-lg)",
             overflow: "hidden",
-            padding: "3.5rem 2.5rem",
+            padding: "clamp(1.75rem, 4vw, 3.5rem) clamp(1.25rem, 3vw, 2.5rem)",
             background: "linear-gradient(135deg, rgba(24, 22, 34, 0.95) 0%, rgba(9, 8, 14, 0.98) 100%)",
             border: "1px solid var(--line-strong)",
             boxShadow: "var(--shadow-lg)",

@@ -154,14 +154,7 @@ export default function ParticipantDashboard() {
       </section>
 
       {/* 4-Stat Metric Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "1.25rem",
-          marginBottom: "2rem"
-        }}
-      >
+      <div className="kpi-grid" style={{ marginBottom: "2rem" }}>
         <div className="card" style={{ padding: "1.25rem 1.5rem", background: "var(--bg-surface)", border: "1px solid var(--line)" }}>
           <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--dim)", fontWeight: 600 }}>
             ILLENIUM ID

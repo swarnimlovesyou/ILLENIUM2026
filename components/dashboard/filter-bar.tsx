@@ -51,7 +51,7 @@ export function FilterBar({
         borderRadius: "var(--radius-md)"
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flex: 1, minWidth: "260px" }}>
+      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.75rem", flex: 1, minWidth: 0, width: "100%" }}>
         {/* Search input container */}
         <div
           style={{

@@ -27,7 +27,10 @@ export function TabBar({ tabs, activeTab, onChange }: TabBarProps) {
         borderRadius: "var(--radius-md)",
         border: "1px solid var(--line)",
         overflowX: "auto",
-        scrollbarWidth: "none"
+        WebkitOverflowScrolling: "touch",
+        scrollbarWidth: "none",
+        width: "100%",
+        maxWidth: "100%"
       }}
     >
       {tabs.map((tab) => {

@@ -79,7 +79,7 @@ export function DashboardHeader({
           {Icon && <Icon size={13} />}
           <span>{kicker}</span>
         </div>
-        <h1 style={{ fontSize: "2rem", fontWeight: 700, letterSpacing: "-0.02em" }}>{title}</h1>
+        <h1 style={{ fontSize: "clamp(1.5rem, 5vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>{title}</h1>
         <p style={{ marginTop: "0.25rem", fontSize: "0.9rem", color: "var(--bone-dim)", maxWidth: "800px" }}>
           {subtitle}
         </p>

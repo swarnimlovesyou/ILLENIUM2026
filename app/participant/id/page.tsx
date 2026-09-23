@@ -77,7 +77,7 @@ export default function DigitalIdPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem", alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: "1.5rem", alignItems: "start" }}>
         {/* Physical ID Pass Simulation */}
         <div
           className="card"
