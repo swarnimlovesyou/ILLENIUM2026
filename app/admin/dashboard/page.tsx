@@ -1,41 +1,23 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { RoleShell } from "@/components/layout/role-shell";
-import { demoStore } from "@/services/demo-store";
+import { masterStore, Profile, AuditLogRecord } from "@/services/master-store";
 
-export default async function AdminDashboard() {
-  let metrics = { participants: 0, verified: 0, pending: 0, checkins: 0, events: 3 };
-  let recent: { action?: string; entity_type?: string; created_at?: string }[] = [];
+export default function AdminDashboard() {
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLogRecord[]>([]);
 
-  try {
-    const db = createAdminClient();
-    const [p, v, pend, c, e, a] = await Promise.all([
-      db.from("participants").select("id", { count: "exact", head: true }),
-      db.from("participants").select("id", { count: "exact", head: true }).eq("verification_status", "verified"),
-      db.from("participants").select("id", { count: "exact", head: true }).eq("verification_status", "pending"),
-      db.from("check_ins").select("id", { count: "exact", head: true }),
-      db.from("events").select("id", { count: "exact", head: true }),
-      db.from("audit_logs").select("action,entity_type,created_at").order("created_at", { ascending: false }).limit(6)
-    ]);
-    metrics = {
-      participants: p.count ?? 0,
-      verified: v.count ?? 0,
-      pending: pend.count ?? 0,
-      checkins: c.count ?? 0,
-      events: e.count ?? 3
-    };
-    recent = a.data ?? [];
-  } catch {
-    /* render zero/demo state */
-  }
+  useEffect(() => {
+    setProfiles(masterStore.getProfiles());
+    setAuditLogs(masterStore.getAuditLogs().slice(0, 8));
+  }, []);
 
-  // Sync with demoStore fallback
-  const demoList = demoStore.getAll();
-  if (demoList.length > 0) {
-    metrics.participants = Math.max(metrics.participants, demoList.length);
-    metrics.verified = Math.max(metrics.verified, demoList.filter((p) => p.verificationStatus === "verified").length);
-    metrics.pending = Math.max(metrics.pending, demoList.filter((p) => p.verificationStatus === "pending").length);
-  }
+  const checkIns = masterStore.getCheckIns();
+  const verified = profiles.filter((p) => p.verificationStatus === "verified").length;
+  const pending = profiles.filter((p) => p.verificationStatus === "pending").length;
+  const events = masterStore.getEvents().length;
 
   return (
     <RoleShell role="admin">
@@ -43,98 +25,142 @@ export default async function AdminDashboard() {
         <div>
           <div className="workspace-kicker">Festival control room</div>
           <h1>The system at a glance.</h1>
-          <p className="workspace-subtitle">Identity, verification and access operations for ILLENIUM 2026.</p>
+          <p className="workspace-subtitle">
+            Identity, verification and access operations for ILLENIUM 2026.
+          </p>
         </div>
         <Link href="/admin/verification" className="button button-primary">
-          Review queue <span>({metrics.pending})</span> ↗
+          Review queue ({pending}) ↗
         </Link>
       </div>
+
       <div className="data-grid">
         <div className="data-card">
-          <div className="data-card-label">Participants</div>
-          <div className="data-card-value">{metrics.participants}</div>
-          <div className="data-card-note">Total applications</div>
+          <div className="data-card-label">Profiles</div>
+          <div className="data-card-value">{profiles.length}</div>
+          <div className="data-card-note">Total identities</div>
         </div>
         <div className="data-card">
           <div className="data-card-label">Verified</div>
-          <div className="data-card-value status-good">{metrics.verified}</div>
+          <div className={`data-card-value${verified > 0 ? " status-good" : ""}`}>{verified}</div>
           <div className="data-card-note">Approved identities</div>
         </div>
         <div className="data-card">
           <div className="data-card-label">Needs review</div>
-          <div className="data-card-value status-warn">{metrics.pending}</div>
+          <div className={`data-card-value${pending > 0 ? " status-warn" : ""}`}>{pending}</div>
           <div className="data-card-note">Awaiting decision</div>
         </div>
         <div className="data-card">
           <div className="data-card-label">Check-ins</div>
-          <div className="data-card-value">{metrics.checkins}</div>
+          <div className="data-card-value">{checkIns.length}</div>
           <div className="data-card-note">Campus + event entries</div>
         </div>
+        <div className="data-card">
+          <div className="data-card-label">Events</div>
+          <div className="data-card-value">{events}</div>
+          <div className="data-card-note">In the programme</div>
+        </div>
+        <div className="data-card">
+          <div className="data-card-label">Contingents</div>
+          <div className="data-card-value">{masterStore.getContingents().length}</div>
+          <div className="data-card-note">Registered colleges</div>
+        </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.3fr) minmax(280px,.7fr)", gap: "1rem", marginTop: "1rem" }}>
-        <section className="workspace-panel" style={{ marginTop: 0 }}>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(240px, .7fr)", gap: "14px" }}>
+        <section className="workspace-panel" style={{ marginBottom: 0 }}>
           <h2>Recent activity</h2>
-          {recent.length ? (
-            <div className="workspace-table-wrap">
-              <table className="workspace-table">
+          {auditLogs.length ? (
+            <div className="table-wrap">
+              <table>
                 <thead>
                   <tr>
+                    <th>Actor</th>
                     <th>Action</th>
                     <th>Entity</th>
                     <th>Time</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {recent.map((item, index) => (
-                    <tr key={index}>
+                  {auditLogs.map((log) => (
+                    <tr key={log.id}>
                       <td>
-                        <strong>{item.action}</strong>
+                        <b>{log.actorName}</b>
                       </td>
-                      <td>{item.entity_type}</td>
-                      <td>{item.created_at ? new Date(item.created_at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "—"}</td>
+                      <td>{log.action}</td>
+                      <td>
+                        <i>{log.entityType}</i>
+                      </td>
+                      <td>
+                        {new Date(log.createdAt).toLocaleString("en-IN", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <div style={{ padding: "1.3rem 0" }}>
-              <p className="workspace-subtitle">No activity yet. Once registrations and check-ins begin, the audit trail will appear here.</p>
-            </div>
+            <p className="workspace-subtitle">
+              No activity yet. Once registrations and check-ins begin, the audit trail will appear here.
+            </p>
           )}
         </section>
-        <section className="workspace-panel" style={{ marginTop: 0 }}>
+
+        <section className="workspace-panel" style={{ marginBottom: 0 }}>
           <h2>Quick actions</h2>
           <div style={{ display: "grid", gap: ".55rem" }}>
+            <Link href="/admin/contingents" className="button button-primary">
+              🏛 Contingents (CL Meet) ↗
+            </Link>
+            <Link href="/admin/scoring" className="button button-primary">
+              ★ Master Scoring &amp; Bids ↗
+            </Link>
+            <Link href="/leaderboard" className="button button-outline">
+              🏆 Official Leaderboard ↗
+            </Link>
+            <Link href="/judge" className="button button-outline">
+              ⚖️ Judge Portal ↗
+            </Link>
             <Link href="/admin/verification" className="button button-outline">
-              Open verification queue ↗
+              ✓ Open verification queue ↗
             </Link>
             <Link href="/admin/participants" className="button button-outline">
-              Search participants ↗
+              ◎ Search participants ↗
             </Link>
             <Link href="/admin/events" className="button button-outline">
-              Manage events ↗
+              ✦ Manage events ↗
             </Link>
-            <Link href="/oc/scanner" className="button button-primary">
-              Open scanner ↗
+            <Link href="/admin/audit" className="button button-outline">
+              📋 Audit Trail ↗
+            </Link>
+            <Link href="/oc/scanner" className="button button-secondary">
+              ⌁ Open QR scanner ↗
             </Link>
           </div>
         </section>
       </div>
+
       <section className="workspace-panel">
         <h2>Operational readiness</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: ".8rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: ".8rem" }}>
           <div>
-            <span className="workspace-status status-good">Database connected</span>
-            <p className="workspace-subtitle">Live counts are read from Supabase.</p>
+            <span className="workspace-status status-good">Master store active</span>
+            <p className="workspace-subtitle">In-memory store with full domain model ready.</p>
           </div>
           <div>
             <span className="workspace-status status-good">QR verification server-side</span>
             <p className="workspace-subtitle">Opaque tokens only; no PII in QR codes.</p>
           </div>
           <div>
-            <span className="workspace-status status-neutral">Offline mode disabled</span>
-            <p className="workspace-subtitle">Scanner requires a live connection in V1.</p>
+            <span className="workspace-status status-good">Offline / demo mode enabled</span>
+            <p className="workspace-subtitle">Seeded data available when DB is offline.</p>
+          </div>
+          <div>
+            <span className="workspace-status status-good">Audit log active</span>
+            <p className="workspace-subtitle">All material actions are tracked automatically.</p>
           </div>
         </div>
       </section>

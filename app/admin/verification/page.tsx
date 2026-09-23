@@ -1,45 +1,37 @@
-import { createClient } from "@/lib/supabase/server";
-import { approveParticipant } from "@/services/participant-service";
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
 import { RoleShell } from "@/components/layout/role-shell";
-import { demoStore } from "@/services/demo-store";
+import { masterStore, Profile } from "@/services/master-store";
 
-export default async function VerificationPage() {
-  let pendingList: any[] = [];
+export default function VerificationPage() {
+  const [pending, setPending] = useState<Profile[]>([]);
+  const [, startTransition] = useTransition();
 
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("participants")
-      .select("id, illenium_id, college_roll_number, verification_status, registration_status, profiles(full_name, email), colleges(name)")
-      .eq("verification_status", "pending")
-      .order("created_at");
-
-    if (data && data.length > 0) {
-      pendingList = data.map((row) => {
-        const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
-        const college = Array.isArray(row.colleges) ? row.colleges[0] : row.colleges;
-        return {
-          id: row.id,
-          full_name: profile?.full_name ?? "Participant",
-          email: profile?.email ?? "—",
-          college: college?.name ?? "Atlas SkillTech University",
-          roll_number: row.college_roll_number ?? "—"
-        };
-      });
-    }
-  } catch {
-    /* fallback to demoStore */
+  function load() {
+    setPending(masterStore.getProfiles().filter((p) => p.verificationStatus === "pending"));
   }
 
-  if (pendingList.length === 0) {
-    const demos = demoStore.getAll().filter((d) => d.verificationStatus === "pending");
-    pendingList = demos.map((d) => ({
-      id: d.id,
-      full_name: d.fullName,
-      email: d.email,
-      college: d.college,
-      roll_number: d.collegeRollNumber
-    }));
+  useEffect(() => { load(); }, []);
+
+  function approve(profileId: string) {
+    const profiles = masterStore.getProfiles();
+    const p = profiles.find((p) => p.id === profileId);
+    if (p) {
+      p.verificationStatus = "verified";
+      masterStore.logAudit("p-cp", "profile.verified", "profile", p.id, `Approved identity for ${p.fullName}`);
+    }
+    startTransition(() => load());
+  }
+
+  function reject(profileId: string) {
+    const profiles = masterStore.getProfiles();
+    const p = profiles.find((p) => p.id === profileId);
+    if (p) {
+      p.verificationStatus = "rejected";
+      masterStore.logAudit("p-cp", "profile.rejected", "profile", p.id, `Rejected identity for ${p.fullName}`);
+    }
+    startTransition(() => load());
   }
 
   return (
@@ -48,40 +40,55 @@ export default async function VerificationPage() {
         <div>
           <div className="workspace-kicker">Review queue</div>
           <h1>Identity verification</h1>
-          <p className="workspace-subtitle">Review submitted documents before an ILLENIUM ID and secure QR are issued.</p>
+          <p className="workspace-subtitle">
+            Review submitted documents before an ILLENIUM ID and secure QR are issued.
+          </p>
         </div>
-        <span className="status-pill status-warning">{pendingList.length} awaiting review</span>
+        <span className="status-pill status-warning">{pending.length} awaiting review</span>
       </div>
-      <div className="workspace-panel table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>College</th>
-              <th>Roll number</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pendingList.map((row) => (
-              <tr key={row.id}>
-                <td>
-                  <strong>{row.full_name}</strong>
-                  <small>{row.email}</small>
-                </td>
-                <td>{row.college}</td>
-                <td>{row.roll_number}</td>
-                <td>
-                  <form action={approveParticipant}>
-                    <input type="hidden" name="participantId" value={row.id} />
-                    <button className="button button-primary">Approve & issue ID</button>
-                  </form>
-                </td>
+
+      <div className="workspace-panel" style={{ padding: 0 }}>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>College</th>
+                <th>Roll number</th>
+                <th>Department</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!pendingList.length && <p className="workspace-subtitle">The queue is clear.</p>}
+            </thead>
+            <tbody>
+              {pending.map((row) => (
+                <tr key={row.id}>
+                  <td>
+                    <b>{row.fullName}</b>
+                    <i>{row.email}</i>
+                  </td>
+                  <td>{row.collegeName}</td>
+                  <td>{row.collegeRollNumber ?? "—"}</td>
+                  <td>{row.department ?? "—"}</td>
+                  <td>
+                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                      <button className="button button-primary" style={{ minHeight: "32px", padding: "0 14px", fontSize: "12px" }} onClick={() => approve(row.id)}>
+                        Approve &amp; issue ID
+                      </button>
+                      <button className="button button-danger" style={{ minHeight: "32px", padding: "0 14px", fontSize: "12px" }} onClick={() => reject(row.id)}>
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!pending.length && (
+            <p className="workspace-subtitle" style={{ padding: "20px 24px" }}>
+              The queue is clear. All submitted identities have been reviewed.
+            </p>
+          )}
+        </div>
       </div>
     </RoleShell>
   );

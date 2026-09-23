@@ -1,127 +1,58 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { participantSchema } from "@/lib/validation/schemas";
-import { demoStore } from "@/services/demo-store";
-
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { masterStore, Profile, AccredCategory, UserRole } from "@/services/master-store";
 
 export async function POST(request: Request) {
   try {
-    const json = await request.json();
-    const result = participantSchema.safeParse(json);
-    
-    if (!result.success) {
-      const errorMsg = result.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join(" | ");
-      return NextResponse.json({ message: errorMsg }, { status: 400 });
-    }
-    
-    const payload = result.data;
-    const supabase = await createClient();
-    const adminSupabase = createAdminClient();
-    
-    let userId: string | null = null;
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        userId = user.id;
-      } else {
-        const { data: userList } = await adminSupabase.auth.admin.listUsers();
-        const existingUser = userList?.users?.find(u => u.email?.toLowerCase() === payload.email.toLowerCase());
-        
-        if (existingUser) {
-          userId = existingUser.id;
-        } else {
-          const pwd = payload.password && payload.password.length >= 6 ? payload.password : "Illenium2026!";
-          const { data: newUser } = await adminSupabase.auth.admin.createUser({
-            email: payload.email,
-            password: pwd,
-            email_confirm: true,
-            user_metadata: { full_name: payload.fullName }
-          });
-          if (newUser?.user) userId = newUser.user.id;
-        }
-      }
-    } catch {
-      // ignore
+    const json = await request.json() as {
+      fullName?: string;
+      email?: string;
+      phone?: string;
+      collegeName?: string;
+      collegeRollNumber?: string;
+      role?: string;
+      category?: string;
+    };
+
+    if (!json.fullName || !json.email) {
+      return NextResponse.json({ message: "fullName and email are required." }, { status: 400 });
     }
 
-    if (!userId) userId = "00000000-0000-0000-0000-000000000099";
-
-    let targetCollegeId: string | null = null;
-    const collegeSearchTerm = (payload.collegeId || "").trim();
-
-    try {
-      const { data: collegesList } = await adminSupabase.from("colleges").select("id, name, code");
-      if (collegesList && collegesList.length > 0) {
-        const matched = collegesList.find((c: { id: string; name: string; code: string }) => 
-          c.id === collegeSearchTerm || 
-          c.code.toLowerCase() === collegeSearchTerm.toLowerCase() || 
-          c.name.toLowerCase().includes(collegeSearchTerm.toLowerCase())
-        );
-        targetCollegeId = matched ? matched.id : collegesList[0].id;
-      } else {
-        // Seed default college if missing
-        const { data: newCol } = await adminSupabase.from("colleges").insert({
-          name: "Atlas SkillTech University",
-          short_name: "Atlas",
-          code: "ATLAS"
-        }).select("id").single();
-        if (newCol) targetCollegeId = newCol.id;
-      }
-    } catch {
-      // ignore
+    // Check for duplicates
+    const existing = masterStore.getProfileByEmail(json.email);
+    if (existing) {
+      return NextResponse.json({ message: "A profile with this email already exists.", participantId: existing.id }, { status: 409 });
     }
 
-    let dbParticipantId: string | null = null;
+    const count = masterStore.getProfiles().filter((p) => p.illeniumId.startsWith("ILL-26-")).length + 1;
+    const illeniumId = `ILL-26-${String(count).padStart(6, "0")}`;
 
-    if (targetCollegeId) {
-      try {
-        const { data: profile } = await adminSupabase.from("profiles").upsert({
-          user_id: userId,
-          full_name: payload.fullName,
-          email: payload.email,
-          phone: payload.phone || "N/A",
-          role: "participant"
-        }, { onConflict: "user_id" }).select("id").maybeSingle();
-
-        if (profile) {
-          const { data: participant } = await adminSupabase.from("participants").upsert({
-            profile_id: profile.id,
-            college_id: targetCollegeId,
-            college_roll_number: payload.collegeRollNumber || "N/A",
-            registration_status: "submitted",
-            verification_status: "pending"
-          }, { onConflict: "profile_id" }).select("id").maybeSingle();
-
-          if (participant) dbParticipantId = participant.id;
-        }
-      } catch {
-        // Ignore DB error
-      }
-    }
-
-    const participantIdToReturn = dbParticipantId || `part-${Date.now()}`;
-
-    // Add to shared demo store
-    demoStore.add({
-      id: participantIdToReturn,
-      fullName: payload.fullName,
-      email: payload.email,
-      college: "Atlas SkillTech University",
-      collegeRollNumber: payload.collegeRollNumber || "2410244",
+    const profile: Profile = {
+      id: `p-${Date.now()}`,
+      illeniumId,
+      fullName: json.fullName,
+      email: json.email,
+      phone: json.phone,
+      role: (json.role ?? "participant") as UserRole,
+      category: (json.category ?? "cc") as AccredCategory,
+      collegeName: json.collegeName ?? "Atlas SkillTech University",
+      collegeRollNumber: json.collegeRollNumber,
       verificationStatus: "pending",
-      registrationStatus: "submitted",
-      events: (payload.eventIds || []).map(() => ({ name: "Battle of Bands", category: "Music", venue: "Main Arena" })),
-      createdAt: new Date().toISOString()
-    });
+    };
 
-    return NextResponse.json({ 
-      participantId: participantIdToReturn, 
-      registeredEmail: payload.email 
+    masterStore.addProfile(profile);
+
+    return NextResponse.json({
+      participantId: profile.id,
+      illeniumId: profile.illeniumId,
+      registeredEmail: profile.email,
     }, { status: 201 });
+
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unexpected error during registration.";
-    return NextResponse.json({ message: msg }, { status: 400 });
+    return NextResponse.json({ message: msg }, { status: 500 });
   }
+}
+
+export async function GET() {
+  return NextResponse.json(masterStore.getProfiles());
 }

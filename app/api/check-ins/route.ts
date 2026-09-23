@@ -1,41 +1,69 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createCheckIn } from "@/services/checkin-service";
-import { checkinSchema } from "@/lib/validation/schemas";
+import { masterStore, CheckInType } from "@/services/master-store";
+import { verifyQrToken } from "@/services/verification-service";
 
 export async function POST(request: Request) {
   try {
-    const json = await request.json();
-    const result = checkinSchema.safeParse(json);
-    
-    if (!result.success) {
-      const issues = result.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join(" | ");
-      return NextResponse.json({ message: `Validation error: ${issues}`, ok: false }, { status: 400 });
+    const json = await request.json() as {
+      token?: string;
+      checkInType?: string;
+      eventId?: string;
+    };
+
+    const token = json.token?.trim();
+    if (!token) {
+      return NextResponse.json({ ok: false, message: "Token required." }, { status: 400 });
     }
 
-    const payload = result.data;
-    const supabase = await createClient();
-    const adminDb = createAdminClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const checkInType = (json.checkInType ?? "campus_entry") as CheckInType;
+    const eventId = json.eventId;
 
-    let actorProfileId = "9ea21ed4-b454-4ffa-a41b-60e43d94dfce"; // Default Admin Profile ID
+    // Verify first
+    const verification = await verifyQrToken(token, eventId);
 
-    if (user) {
-      const { data: profile } = await adminDb.from("profiles").select("id, role").eq("user_id", user.id).maybeSingle();
-      if (profile) {
-        actorProfileId = profile.id;
-      }
+    if (!verification.participant || verification.status === "invalid") {
+      return NextResponse.json({ ok: false, message: verification.message ?? "Invalid token." }, { status: 400 });
     }
 
-    const res = await createCheckIn(payload.token, actorProfileId, payload.checkInType, payload.eventId || undefined);
-    
+    if (verification.status === "already_checked_in") {
+      return NextResponse.json({
+        ok: false,
+        message: "Already checked in.",
+        checkedInAt: verification.checkedInAt,
+      }, { status: 409 });
+    }
+
+    const profile = masterStore.getProfileById(verification.participant.id);
+    if (!profile) {
+      return NextResponse.json({ ok: false, message: "Profile not found." }, { status: 404 });
+    }
+
+    const event = eventId ? masterStore.getEventById(eventId) : undefined;
+
+    const result = masterStore.addCheckIn({
+      participantId: profile.id,
+      fullName: profile.fullName,
+      illeniumId: profile.illeniumId,
+      eventId: event?.id,
+      eventName: event?.name,
+      venueName: event?.venue,
+      checkInType,
+      scannedBy: "p-oc-dev",
+      attendanceStatus: "accepted",
+    });
+
     return NextResponse.json({
-      ok: res.ok,
-      message: res.message || (res.ok ? "Check-in saved." : "Check-in failed.")
-    }, { status: res.ok ? 200 : 400 });
+      ok: result.ok,
+      message: result.message,
+    }, { status: result.ok ? 200 : 409 });
+
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Check-in could not be recorded.";
-    return NextResponse.json({ message: msg, ok: false }, { status: 400 });
+    return NextResponse.json({ ok: false, message: msg }, { status: 500 });
   }
+}
+
+export async function GET() {
+  const checkIns = masterStore.getCheckIns();
+  return NextResponse.json(checkIns);
 }

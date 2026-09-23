@@ -1,85 +1,31 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { RoleShell } from "@/components/layout/role-shell";
-import { createClient } from "@/lib/supabase/server";
-import { decryptToken } from "@/lib/qr/secure-token";
-import { qrUrl } from "@/lib/qr/token";
-import { demoStore } from "@/services/demo-store";
+import { masterStore, Profile } from "@/services/master-store";
 
-export default async function DigitalIdPage() {
-  let data: {
-    full_name?: string;
-    college?: string;
-    illenium_id?: string;
-    photo_url?: string | null;
-    token_ciphertext?: string;
-    verification_status?: string;
-    registration_status?: string;
-  } | null = null;
+export default function DigitalIdPage() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [qrData, setQrData] = useState("");
 
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+  useEffect(() => {
+    const p = masterStore.getProfileById("p-cl-parth");
+    setProfile(p || null);
 
-    if (user) {
-      const { data: row } = await supabase
-        .from("participants")
-        .select("illenium_id, verification_status, registration_status, profiles!inner(full_name, photo_url), colleges(name), qr_tokens(token_ciphertext)")
-        .eq("profiles.user_id", user.id)
-        .maybeSingle();
-
-      if (row) {
-        const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
-        const college = Array.isArray(row.colleges) ? row.colleges[0] : row.colleges;
-        const qr = Array.isArray(row.qr_tokens) ? row.qr_tokens[0] : row.qr_tokens;
-        data = {
-          full_name: profile?.full_name,
-          college: college?.name,
-          illenium_id: row.illenium_id,
-          photo_url: profile?.photo_url,
-          token_ciphertext: qr?.token_ciphertext,
-          verification_status: row.verification_status,
-          registration_status: row.registration_status
-        };
-      }
+    if (p && p.verificationStatus === "verified") {
+      QRCode.toDataURL(p.illeniumId, { width: 420, margin: 1 })
+        .then(setQrData)
+        .catch(() => setQrData(""));
     }
-  } catch {
-    /* fallback to demoStore */
-  }
+  }, []);
 
-  // Fallback to demoStore if no Supabase user or data is empty
-  if (!data || !data.full_name) {
-    const firstDemo = demoStore.getAll()[0];
-    if (firstDemo) {
-      data = {
-        full_name: firstDemo.fullName,
-        college: firstDemo.college,
-        illenium_id: firstDemo.illeniumId,
-        photo_url: null,
-        token_ciphertext: undefined,
-        verification_status: firstDemo.verificationStatus,
-        registration_status: firstDemo.registrationStatus
-      };
-    }
-  }
-
-  let qrData = "";
-  if (data?.token_ciphertext && data.verification_status === "verified" && data.registration_status === "approved") {
-    try {
-      qrData = await QRCode.toDataURL(qrUrl(decryptToken(data.token_ciphertext)), { width: 420, margin: 1 });
-    } catch {
-      qrData = "";
-    }
-  } else if (data?.verification_status === "verified") {
-    try {
-      qrData = await QRCode.toDataURL(qrUrl(data.illenium_id ?? "ILL-26-000001"), { width: 420, margin: 1 });
-    } catch {
-      qrData = "";
-    }
-  }
-
-  const status = data?.verification_status === "verified" ? "Verified" : data?.verification_status === "rejected" ? "Needs attention" : "Pending review";
+  const status =
+    profile?.verificationStatus === "verified"
+      ? "Verified"
+      : profile?.verificationStatus === "rejected"
+      ? "Needs attention"
+      : "Pending review";
 
   return (
     <RoleShell role="participant">
@@ -87,31 +33,48 @@ export default async function DigitalIdPage() {
         <div>
           <div className="workspace-kicker">Your access credential</div>
           <h1>Digital ID</h1>
-          <p className="workspace-subtitle">Keep this pass ready at campus entry and every registered event.</p>
+          <p className="workspace-subtitle">
+            Keep this pass ready at campus entry and every registered event.
+          </p>
         </div>
-        <span className={`status-pill ${data?.verification_status === "verified" ? "status-success" : "status-warning"}`}>{status}</span>
+        <span
+          className={`status-pill ${profile?.verificationStatus === "verified" ? "status-success" : "status-warning"}`}
+        >
+          {status}
+        </span>
       </div>
 
-      <section className="digital-id-layout">
+      <section style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "20px", alignItems: "start" }}>
+        {/* ID Card */}
         <div className="id-card">
           <div className="id-card-top">
-            <span>ILLENIUM / 26</span>
-            <span>{status}</span>
+            <span>ILLENIUM™ / 26</span>
+            <span style={{ color: profile?.verificationStatus === "verified" ? "var(--acid)" : "#ff9f1c" }}>
+              {status}
+            </span>
           </div>
 
           <div className="id-card-person">
-            <img className="id-photo" src={data?.photo_url ?? "/favicon.svg"} alt="Participant profile" />
+            <div className="id-avatar">
+              {profile?.fullName?.charAt(0) ?? "?"}
+            </div>
             <div>
-              <h2>{data?.full_name ?? "Parth Parmar"}</h2>
-              <p>{data?.college ?? "Atlas SkillTech University"}</p>
-              <strong>{data?.illenium_id ?? "ILL-26-000001"}</strong>
+              <h2 style={{ fontFamily: '"Anton", sans-serif', textTransform: "uppercase", fontSize: "clamp(18px, 3vw, 26px)", lineHeight: 1, letterSpacing: "0.02em", color: "var(--bone)", margin: 0 }}>
+                {profile?.fullName ?? "Parth Parmar"}
+              </h2>
+              <p style={{ fontSize: "13px", color: "var(--dim)", margin: "6px 0 2px" }}>
+                {profile?.collegeName ?? "Atlas SkillTech University"}
+              </p>
+              <strong style={{ fontFamily: '"Anton", sans-serif', fontSize: "14px", letterSpacing: "0.08em", color: "var(--acid)" }}>
+                {profile?.illeniumId ?? "ILL-26-000001"}
+              </strong>
             </div>
           </div>
 
           <div className="id-card-bottom">
             <div>
-              <small>REGISTRATION</small>
-              <span>{data?.registration_status ?? "approved"}</span>
+              <small>ROLE</small>
+              <span style={{ textTransform: "uppercase" }}>{profile?.role ?? "participant"}</span>
             </div>
             <div>
               <small>QR STATUS</small>
@@ -120,12 +83,20 @@ export default async function DigitalIdPage() {
           </div>
 
           {qrData ? (
-            <img className="id-qr" src={qrData} alt="Secure ILLENIUM QR" />
+            <img
+              className="id-qr"
+              src={qrData}
+              alt="Secure ILLENIUM QR"
+              style={{ display: "block", width: "100%", maxWidth: "240px", margin: "16px auto 0", borderRadius: "4px" }}
+            />
           ) : (
-            <div className="id-pending">Your unique QR appears after registration and identity review are approved.</div>
+            <div className="id-pending">
+              Your unique QR appears after registration and identity review are approved.
+            </div>
           )}
         </div>
 
+        {/* Instructions panel */}
         <aside className="workspace-panel">
           <div className="workspace-kicker">How to use it</div>
           <h2>One pass, every checkpoint.</h2>
@@ -133,27 +104,25 @@ export default async function DigitalIdPage() {
             Show the QR at campus entry, then again at the check-in desk for each event you registered for. It is verified server-side and cannot be reused after a successful check-in.
           </p>
           <div className="id-detail-list">
-            <div>
-              <span>01</span>
-              <p>
-                <strong>Campus entry</strong>
-                <br />
-                Present your pass at the main gate.
+            <div style={{ display: "flex", gap: "14px", alignItems: "flex-start", marginBottom: "16px" }}>
+              <span style={{ fontFamily: '"Anton", sans-serif', color: "var(--acid)", fontSize: "20px", flexShrink: 0 }}>01</span>
+              <p style={{ margin: 0, fontSize: "13.5px", lineHeight: 1.6 }}>
+                <strong style={{ color: "var(--bone)" }}>Campus entry</strong><br />
+                <span style={{ color: "var(--dim)" }}>Present your pass at the main gate.</span>
               </p>
             </div>
-            <div>
-              <span>02</span>
-              <p>
-                <strong>Programme</strong>
-                <br />
-                Use your dashboard to see where and when to report.
+            <div style={{ display: "flex", gap: "14px", alignItems: "flex-start", marginBottom: "16px" }}>
+              <span style={{ fontFamily: '"Anton", sans-serif', color: "var(--acid)", fontSize: "20px", flexShrink: 0 }}>02</span>
+              <p style={{ margin: 0, fontSize: "13.5px", lineHeight: 1.6 }}>
+                <strong style={{ color: "var(--bone)" }}>Programme</strong><br />
+                <span style={{ color: "var(--dim)" }}>Use your dashboard to see where and when to report.</span>
               </p>
             </div>
-            <div>
-              <span>03</span>
-              <p>
-                <strong>Event check-in</strong>
-                <br />A unique event record prevents duplicate entry.
+            <div style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
+              <span style={{ fontFamily: '"Anton", sans-serif', color: "var(--acid)", fontSize: "20px", flexShrink: 0 }}>03</span>
+              <p style={{ margin: 0, fontSize: "13.5px", lineHeight: 1.6 }}>
+                <strong style={{ color: "var(--bone)" }}>Event check-in</strong><br />
+                <span style={{ color: "var(--dim)" }}>A unique event record prevents duplicate entry.</span>
               </p>
             </div>
           </div>

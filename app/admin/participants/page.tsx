@@ -1,43 +1,32 @@
-import { createClient } from "@/lib/supabase/server";
+"use client";
+
+import { useEffect, useState } from "react";
 import { RoleShell } from "@/components/layout/role-shell";
-import { demoStore } from "@/services/demo-store";
+import { masterStore, Profile } from "@/services/master-store";
 
-export default async function ParticipantsPage() {
-  let participantsList: any[] = [];
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("participants")
-      .select("id, illenium_id, college_roll_number, verification_status, registration_status, profiles(full_name, email), colleges(name)")
-      .order("created_at", { ascending: false });
-    if (data && data.length > 0) {
-      participantsList = data.map((row) => {
-        const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
-        const college = Array.isArray(row.colleges) ? row.colleges[0] : row.colleges;
-        return {
-          id: row.id,
-          full_name: profile?.full_name ?? "Participant",
-          email: profile?.email ?? "—",
-          college: college?.name ?? "Atlas SkillTech University",
-          illenium_id: row.illenium_id ?? "Pending",
-          verification_status: row.verification_status ?? "pending"
-        };
-      });
-    }
-  } catch {
-    /* fallback to demoStore */
-  }
+export default function ParticipantsPage() {
+  const [search, setSearch] = useState("");
+  const [list, setList] = useState<Profile[]>([]);
 
-  if (participantsList.length === 0) {
-    const demos = demoStore.getAll();
-    participantsList = demos.map((d) => ({
-      id: d.id,
-      full_name: d.fullName,
-      email: d.email,
-      college: d.college,
-      illenium_id: d.illeniumId,
-      verification_status: d.verificationStatus
-    }));
+  useEffect(() => {
+    setList(masterStore.getProfiles());
+  }, []);
+
+  const filtered = list.filter((p) => {
+    const q = search.toLowerCase();
+    return (
+      !q ||
+      p.fullName.toLowerCase().includes(q) ||
+      p.illeniumId.toLowerCase().includes(q) ||
+      p.email.toLowerCase().includes(q) ||
+      p.collegeName.toLowerCase().includes(q)
+    );
+  });
+
+  function statusClass(s: string) {
+    if (s === "verified") return "status-success";
+    if (s === "rejected") return "status-danger";
+    return "status-warning";
   }
 
   return (
@@ -46,47 +35,62 @@ export default async function ParticipantsPage() {
         <div>
           <div className="workspace-kicker">People</div>
           <h1>Participant directory</h1>
-          <p className="workspace-subtitle">A live view of registration, identity review and issued access credentials.</p>
+          <p className="workspace-subtitle">
+            A live view of registration, identity review, and issued access credentials.
+          </p>
         </div>
       </div>
-      <div className="workspace-panel table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>College</th>
-              <th>ILLENIUM ID</th>
-              <th>Verification</th>
-            </tr>
-          </thead>
-          <tbody>
-            {participantsList.map((row) => (
-              <tr key={row.id}>
-                <td>
-                  <strong>{row.full_name}</strong>
-                </td>
-                <td>{row.email}</td>
-                <td>{row.college}</td>
-                <td>{row.illenium_id}</td>
-                <td>
-                  <span
-                    className={`status-pill ${
-                      row.verification_status === "verified"
-                        ? "status-success"
-                        : row.verification_status === "rejected"
-                        ? "status-danger"
-                        : "status-warning"
-                    }`}
-                  >
-                    {row.verification_status}
-                  </span>
-                </td>
+
+      <div className="workspace-panel" style={{ padding: "16px 20px", marginBottom: "12px" }}>
+        <input
+          className="workspace-input"
+          placeholder="Search by name, ILLENIUM ID, email or college…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="workspace-panel" style={{ padding: 0 }}>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>ILLENIUM ID</th>
+                <th>College</th>
+                <th>Role</th>
+                <th>Verification</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!participantsList.length && <p className="workspace-subtitle">No participant records yet.</p>}
+            </thead>
+            <tbody>
+              {filtered.map((row) => (
+                <tr key={row.id}>
+                  <td>
+                    <b>{row.fullName}</b>
+                    <i>{row.email}</i>
+                  </td>
+                  <td>
+                    <b>{row.illeniumId}</b>
+                  </td>
+                  <td>{row.collegeName}</td>
+                  <td style={{ textTransform: "uppercase", fontSize: "12px", letterSpacing: "0.08em", color: "var(--dim)" }}>
+                    {row.role}
+                  </td>
+                  <td>
+                    <span className={`status-pill ${statusClass(row.verificationStatus)}`}>
+                      {row.verificationStatus}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!filtered.length && (
+            <p className="workspace-subtitle" style={{ padding: "20px 24px" }}>
+              {search ? `No results for "${search}".` : "No participant records yet."}
+            </p>
+          )}
+        </div>
       </div>
     </RoleShell>
   );

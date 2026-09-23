@@ -40,12 +40,16 @@ export default function LoginPage() {
         redirectUrl = "/admin/dashboard";
       } else if (targetEmail.toLowerCase().includes("oc") || targetEmail.toLowerCase() === "oc01@example.com") {
         redirectUrl = "/oc/dashboard";
+      } else if (targetEmail.toLowerCase().includes("judge") || targetEmail.toLowerCase() === "judge@example.com") {
+        redirectUrl = "/judge";
       } else {
         const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", data.user.id).maybeSingle();
         if (profile?.role === "admin" || profile?.role === "executive_core") {
           redirectUrl = "/admin/dashboard";
         } else if (profile?.role === "oc") {
           redirectUrl = "/oc/dashboard";
+        } else if (profile?.role === "judge") {
+          redirectUrl = "/judge";
         }
       }
 
@@ -65,6 +69,11 @@ export default function LoginPage() {
   const setOcDemo = () => {
     setEmail("oc01@example.com");
     setPassword("OcPass2026!");
+  };
+
+  const setJudgeDemo = () => {
+    setEmail("judge@example.com");
+    setPassword("JudgePass2026!");
   };
 
   return (
@@ -99,12 +108,15 @@ export default function LoginPage() {
             <div className="muted" style={{ fontSize: ".75rem", marginBottom: ".5rem", textTransform: "uppercase", letterSpacing: ".08em" }}>
               Quick Fill Demo Credentials
             </div>
-            <div style={{ display: "flex", gap: ".5rem" }}>
+            <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
               <button className="btn btn-ghost" style={{ fontSize: ".75rem", padding: ".3rem .6rem", minHeight: 34 }} onClick={setAdminDemo}>
-                🛡️ Admin Account
+                🛡️ Admin
               </button>
               <button className="btn btn-ghost" style={{ fontSize: ".75rem", padding: ".3rem .6rem", minHeight: 34 }} onClick={setOcDemo}>
-                📷 OC Scanner Account
+                📷 OC Scanner
+              </button>
+              <button className="btn btn-ghost" style={{ fontSize: ".75rem", padding: ".3rem .6rem", minHeight: 34 }} onClick={setJudgeDemo}>
+                ⚖️ Judge
               </button>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 
-type Role = "participant" | "oc" | "admin";
+type Role = "participant" | "oc" | "admin" | "judge";
 
 const configs = {
   participant: {
@@ -14,9 +14,11 @@ const configs = {
     nav: [
       { href: "/participant/dashboard", label: "Overview", icon: "◈" },
       { href: "/events", label: "Programme", icon: "✦" },
-      { href: "/participant/id", label: "Digital ID", icon: "⌁" }
+      { href: "/participant/bidding", label: "Event Bidding", icon: "★" },
+      { href: "/participant/id", label: "Digital ID", icon: "⌁" },
+      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
     ],
-    accent: "violet"
+    accent: "acid"
   },
   oc: {
     label: "OC operations",
@@ -24,20 +26,34 @@ const configs = {
     nav: [
       { href: "/oc/dashboard", label: "My shift", icon: "◈" },
       { href: "/oc/scanner", label: "Scan pass", icon: "⌁" },
-      { href: "/oc/check-ins", label: "Check-ins", icon: "✓" }
+      { href: "/oc/check-ins", label: "Check-ins", icon: "✓" },
+      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
     ],
-    accent: "blue"
+    accent: "acid"
+  },
+  judge: {
+    label: "Judge Portal",
+    title: "Authenticated Scoring",
+    nav: [
+      { href: "/judge", label: "Score Event", icon: "✦" },
+      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
+    ],
+    accent: "acid"
   },
   admin: {
     label: "Festival control room",
     title: "Operations console",
     nav: [
       { href: "/admin/dashboard", label: "Overview", icon: "◈" },
+      { href: "/admin/contingents", label: "Contingents (CL/ACL)", icon: "🏛" },
       { href: "/admin/verification", label: "Verification", icon: "✓" },
       { href: "/admin/participants", label: "Participants", icon: "◎" },
-      { href: "/admin/events", label: "Events", icon: "✦" }
+      { href: "/admin/events", label: "Events Master", icon: "✦" },
+      { href: "/admin/scoring", label: "Scoring & Bids", icon: "★" },
+      { href: "/admin/audit", label: "Audit Trail", icon: "📋" },
+      { href: "/leaderboard", label: "Leaderboard", icon: "🏆" }
     ],
-    accent: "violet"
+    accent: "acid"
   }
 } as const;
 
